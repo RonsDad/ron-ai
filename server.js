@@ -101,6 +101,9 @@ app.prepare().then(() => {
       // Handle API routes with proxy
       if (pathname.startsWith('/api/claude')) {
         claudeApiProxy(req, res)
+      } else if (pathname.startsWith('/api/placeholder/')) {
+        // Let Next.js handle placeholder API routes
+        await handle(req, res, parsedUrl)
       } else if (pathname.startsWith('/api/')) {
         browserApiProxy(req, res)
       } else if (pathname.startsWith('/live/')) {

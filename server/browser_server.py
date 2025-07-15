@@ -1148,226 +1148,92 @@ class SubAgentManager:
 
 @app.post("/api/start-agent")
 async def start_agent(request: StartAgentRequest):
-    """Start a new browser agent session"""
+    """Start a new browser agent session using enhanced browser manager with browserless"""
     session_id = str(uuid.uuid4())
     virtual_display = None
     
     try:
-        # If running in non-headless mode and virtual display is available, use it
-        if not request.headless and VIRTUAL_DISPLAY_AVAILABLE:
-            logger.info(f"[{session_id}] Starting virtual display for embedded browser...")
-            virtual_display = Display(visible=False, size=(1920, 1080))
-            virtual_display.start()
-            logger.info(f"[{session_id}] Virtual display started")
-
-        logger.info(f"[{session_id}] Creating browser profile...")
+        logger.info(f"[{session_id}] Starting browser agent with instructions: {request.instructions}")
         
-        # Find an available port for remote debugging
-        import socket
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('', 0))
-            debug_port = s.getsockname()[1]
+        # Import enhanced browser manager
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+        from src.browser.enhanced_browser_manager import get_browser_manager
         
-        # Determine if we should use headless mode
-        # On macOS or when virtual display is not available, use headless with debugging
-        use_headless = request.headless
-        if not request.headless and not VIRTUAL_DISPLAY_AVAILABLE:
-            # Use headless mode with debugging for embedding (prevents popup)
-            use_headless = True
-            logger.info(f"[{session_id}] Using headless mode with debugging for embedding (no virtual display available)")
+        # Get browser manager with browserless integration
+        browser_manager = get_browser_manager()
         
-        # Build Chrome args list
-        chrome_args = [
-            f'--remote-debugging-port={debug_port}',
-            '--remote-debugging-address=0.0.0.0',
-            '--disable-web-security=false',
-            '--disable-features=VizDisplayCompositor',
-            '--disable-extensions',
-            '--disable-plugins',
-            '--disable-default-apps',
-            '--disable-background-timer-throttling',
-            '--disable-renderer-backgrounding',
-            '--disable-backgrounding-occluded-windows',
-            '--disable-ipc-flooding-protection',
-            # Additional anti-detection arguments
-            '--disable-blink-features=AutomationControlled',
-            '--exclude-switches=enable-automation',
-            '--disable-dev-shm-usage',
-            # Force window size even in headless mode
-            '--window-size=1280,720',
-            '--start-maximized',
-            # Ensure truly headless operation
-            '--no-first-run',
-            '--no-default-browser-check',
-            '--no-sandbox',  # Required for some environments
-            '--disable-gpu',  # Helps with headless stability
-            '--disable-software-rasterizer',
-            '--hide-scrollbars',
-            '--mute-audio',
-            '--disable-background-timer-throttling',
-            '--disable-backgrounding-occluded-windows',
-            '--disable-renderer-backgrounding',
-            '--disable-features=TranslateUI',
-            '--disable-ipc-flooding-protection',
-            '--disable-breakpad',
-            '--metrics-recording-only',
-            '--no-service-autorun',
-            '--disable-component-update',
-        ]
-        
-        # Add headless mode if needed
-        if use_headless:
-            chrome_args.append('--headless=new')
-        
-        # Create persistent profile directory for better anti-detection
-        import os
-        profile_base = os.path.expanduser('~/.browseruse/profiles')
-        os.makedirs(profile_base, exist_ok=True)
-        
-        browser_profile = BrowserProfile(
-            headless=use_headless,  # Use calculated headless setting
-            # Use persistent profile to maintain cookies and avoid repeated CAPTCHAs
-            user_data_dir=f'{profile_base}/agent_{session_id[:8]}',  # Persistent profile
-            # ENABLE STEALTH MODE TO AVOID CAPTCHAS
-            stealth=True,
-            # Remove domain restrictions to allow all sites
-            allowed_domains=None,  # Allow ALL domains
-            disable_security=False,
-            chromium_sandbox=False,  # Disable sandbox for headless stability
-            # Disable window and devtools
-            devtools=False,  # NEVER open devtools window
-            no_viewport=True if not use_headless else False,  # No viewport constraints for better stealth in headful mode
-            # Use the built args list
-            args=chrome_args,
-            # Use a realistic user agent with random variation
-            user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            # Set viewport for consistent rendering (only in headless mode)
-            viewport={'width': 1280, 'height': 720} if use_headless else None
+        # Create browser session using enhanced manager (will use browserless if configured)
+        browser_session = await browser_manager.create_browser_session(
+            session_id=session_id,
+            browser_mode=None,  # Let it use configured mode (browserless if available)
+            headless=request.headless,
+            enable_live_url=True,
+            enable_recording=True,
+            enable_captcha_solving=True
         )
         
-        logger.info(f"[{session_id}] Creating browser session...")
-        browser_session = BrowserSession(browser_profile=browser_profile)
-        
-        # Start the browser session to get the debugging URL
-        logger.info(f"[{session_id}] Starting browser session...")
-        await browser_session.start()
-        
-        # Get the browser debugging URL
-        browser_url = f"http://localhost:{debug_port}"
-        logger.info(f"[{session_id}] Browser debugging URL: {browser_url}")
-        
-        logger.info(f"[{session_id}] Initializing agent with Gemini 2.5 Flash...")
-        
-        # Configure Gemini 2.5 Flash exactly as requested
+        # Create LLM
         llm = ChatGoogle(
             model="gemini-2.5-flash",
             temperature=0.0,
             api_key=os.getenv("GOOGLE_API_KEY")
         )
         
-
-        logger.info(f"[{session_id}] Agent initialized.")
-
-        # Initialize security manager
-        security_manager = SecurityManager()
-        
-        # Initialize performance optimizer
-        performance_optimizer = PerformanceOptimizer()
-        
-        # Validate initial task for security
-        sanitized_instructions = security_manager.sanitize_input(request.instructions)
-        if sanitized_instructions != request.instructions:
-            logger.warning(f"[{session_id}] Instructions were sanitized")
-        
-        # Optimize agent configuration
-        optimized_config = performance_optimizer.optimize_agent_config({
-            'max_actions_per_step': 10,
-            'max_history_items': 50,
-            'images_per_step': 1,
-            'retry_delay': 5,
-            'max_failures': 3,
-        })
-        
-        # Apply optimized configuration to agent
+        # Create agent using enhanced browser session
         agent = Agent(
-            task=sanitized_instructions,
+            task=request.instructions,
             llm=llm,
             browser_session=browser_session,
             use_vision=True,
-            use_thinking=True,
-            max_actions_per_step=optimized_config['max_actions_per_step'],
-            max_failures=optimized_config['max_failures'],
-            retry_delay=optimized_config['retry_delay'],
-            max_history_items=optimized_config['max_history_items'],
-            images_per_step=optimized_config['images_per_step'],
-            # Enable planner for complex tasks
-            planner_llm=llm,
-            planner_interval=3,
-            is_planner_reasoning=True,
-            # Custom system message for browser automation with anti-CAPTCHA behavior
-            extend_system_message="""
-You are a sophisticated browser automation agent with advanced reasoning capabilities.
-
-Key capabilities:
-1. Extended thinking - Use your thinking process to plan complex multi-step tasks
-2. Parallel tool execution - Execute multiple browser actions simultaneously when possible
-3. Visual understanding - Analyze screenshots to understand page context
-4. Error recovery - Adapt and retry when actions fail
-5. Human collaboration - Work smoothly with human oversight and control
-
-When approaching tasks:
-- Think through the problem step by step
-- Plan your approach before taking actions
-- Use parallel actions when they don't depend on each other
-- Provide clear reasoning for each decision
-- Handle errors gracefully and adapt your strategy
-- Communicate clearly with humans when control is transferred
-
-IMPORTANT - To avoid CAPTCHAs and detection:
-- Add 1-3 second delays between actions to simulate human behavior
-- Type text gradually, not all at once
-- Move mouse naturally, not in straight lines
-- If you encounter a CAPTCHA, STOP and notify that human intervention is needed
-- Prefer using DuckDuckGo (duckduckgo.com) or Bing (bing.com) over Google for searches
-- Wait for pages to fully load before interacting
-- Scroll naturally when viewing content
-"""
+            max_actions_per_step=10,
+            max_failures=3,
         )
         
-        # Initialize sub-agent manager
-        sub_agent_manager = SubAgentManager(llm)
+        # Get browser URL for embedding
+        browser_url = None
+        if hasattr(browser_session, 'live_url') and browser_session.live_url:
+            browser_url = browser_session.live_url
+        elif hasattr(browser_session, 'get_session_info'):
+            session_info = browser_session.get_session_info()
+            browser_url = session_info.get('live_url')
         
+        # Store session for monitoring and control
         active_sessions[session_id] = {
-            "agent": agent, 
+            "agent": agent,
             "browser_session": browser_session,
             "status": "running",
-            "task": sanitized_instructions,
+            "task": request.instructions,
             "browser_url": browser_url,
             "human_control": False,
             "last_screenshot": None,
             "current_url": "",
             "paused": False,
-            "sub_agent_manager": sub_agent_manager,
-            "web_search_agent": WebSearchAgent(llm),
-            "security_manager": security_manager,
-            "performance_optimizer": performance_optimizer,
-            "virtual_display": virtual_display, # Store virtual display reference
+            "performance_optimizer": PerformanceOptimizer(),
+            "security_manager": SecurityManager(),
+            "virtual_display": virtual_display,
         }
-        logger.info(f"[{session_id}] New agent session started.")
-
-        # Automatically run the agent with the given instructions
+        
+        # Run agent asynchronously
         asyncio.create_task(run_agent_task(agent, request.instructions, session_id))
         
-        logger.info(f"[{session_id}] Agent task created. Returning session info.")
+        logger.info(f"[{session_id}] Agent session started with browser URL: {browser_url}")
         return {
-            "session_id": session_id, 
-            "status": "started", 
+            "session_id": session_id,
+            "status": "started",
             "task": request.instructions,
-            "browser_url": browser_url
+            "browser_url": browser_url,
+            "live_url": browser_url
         }
+        
     except Exception as e:
-        logger.error(f"[{session_id}] Failed to start agent session: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"[{session_id}] Failed to start agent: {e}", exc_info=True)
+        return {
+            "session_id": session_id,
+            "status": "error",
+            "task": request.instructions,
+            "error": str(e),
+            "browser_url": None
+        }
 
 @app.post("/api/control-toggle")
 async def control_toggle(request: ControlToggleRequest):

@@ -89,6 +89,9 @@ export function MacroMenu({ isVisible, onSelect, onClose, triggerRef }: MacroMen
       const rect = triggerRef.current.getBoundingClientRect();
       setPosition({ top: rect.top - 10, left: rect.left });
     }
+    if (!isVisible) {
+      setSelectedCategory(null);
+    }
   }, [isVisible, triggerRef]);
 
   if (!isVisible) return null;

@@ -59,19 +59,19 @@ class BrowserUseTool:
     
     @staticmethod
     async def start_browser_agent(instructions: str) -> Dict[str, Any]:
-        """Start a new browser-use agent session"""
+        """Start a new browser-use agent session with browserless integration"""
         if not instructions:
             return {'error': 'Instructions parameter is required but was empty'}
         try:
             async with httpx.AsyncClient() as http_client:
-                # Send the instructions as form data for Body(..., embed=True)
+                # Send the instructions to the browser server with browserless integration
                 response = await http_client.post(
                     'http://localhost:8000/api/start-agent',
                     json={
                         "instructions": instructions,
-                        "headless": False  # Run browser in visible mode for embedding
+                        "headless": False  # Use browserless for embedded browser
                     },
-                    timeout=30.0
+                    timeout=120.0  # Longer timeout for browserless setup
                 )
                 response.raise_for_status()
                 result = response.json()
