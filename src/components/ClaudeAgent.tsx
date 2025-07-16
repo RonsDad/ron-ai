@@ -236,9 +236,9 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    conversation_id: conversationId,
+                    conversation_id: conversationId || 'default-conversation',
                     task: message,
-                    user_id: userId,
+                    user_id: userId || 'anonymous',
                     context: {
                         deep_research_mode: deepResearchMode,
                         enable_sonar_tools: enableSonarTools

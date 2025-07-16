@@ -140,14 +140,10 @@ app.prepare().then(() => {
         console.error('Live browser WS proxy error:', err.message)
         socket.destroy()
       }
-    } else if (pathname === '/_next/webpack-hmr') {
-      // For Next.js HMR connections, let Next.js handle them
-      console.log('Allowing Next.js to handle HMR WebSocket upgrade')
-      // Don't interfere with Next.js HMR - let it handle the connection
     } else {
-      // For any other WebSocket connections, let Next.js handle them
-      console.log('Letting Next.js handle WebSocket upgrade for:', pathname)
-      // Don't destroy the socket - let Next.js handle it
+      // Let Next.js handle all other WebSocket connections including HMR
+      console.log('Delegating WebSocket upgrade to Next.js for:', pathname)
+      // Don't handle the upgrade here - let Next.js handle it naturally
     }
   })
 
