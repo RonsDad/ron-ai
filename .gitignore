@@ -119,3 +119,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 node_modules
+
+# Google Cloud credentials
+nira-463614-de6e431b1b8f.json
