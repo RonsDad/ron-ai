@@ -4,6 +4,8 @@ interface BrowserEmbedProps {
   browserUrl: string;
   sessionId: string;
   isActive: boolean;
+  liveUrl?: string;
+  isBrowserless?: boolean;
   onError?: (error: string) => void;
 }
 
@@ -15,6 +17,8 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
   browserUrl,
   sessionId,
   isActive,
+  liveUrl,
+  isBrowserless = false,
   onError
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,7 +32,14 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
 
     const connectToBrowser = async () => {
       try {
-        // Extract port from browserUrl
+        // If using Browserless and have a live URL, use it directly
+        if (isBrowserless && liveUrl) {
+          setPageUrl(liveUrl);
+          setIsConnecting(false);
+          return;
+        }
+
+        // For local browsers, use CDP
         const url = new URL(browserUrl);
         const port = url.port || '9222';
         
@@ -43,8 +54,7 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
           throw new Error('No debuggable page found');
         }
 
-        // For now, we'll use the page URL in an iframe
-        // In production, you'd want to use a proper browser streaming solution
+        // For local browsers, we'll use the page URL
         setPageUrl(page.url);
         setIsConnecting(false);
 
@@ -96,7 +106,7 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
         wsRef.current.close();
       }
     };
-  }, [browserUrl, isActive, onError]);
+  }, [browserUrl, isActive, liveUrl, isBrowserless, onError]);
 
   if (!isActive) return null;
 
@@ -145,13 +155,61 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
     );
   }
 
-  // Note: Due to browser security policies, we cannot directly embed a local browser window
-  // in an iframe. In a production environment, you would use one of these solutions:
-  // 1. noVNC + Xvfb for virtual display streaming
-  // 2. Chrome Remote Desktop Protocol with a custom viewer
-  // 3. WebRTC screen sharing from the browser
-  // 4. A cloud browser service like Browserless.io
+  // If we have a Browserless live URL, we can embed it directly
+  if (isBrowserless && liveUrl) {
+    return (
+      <div ref={containerRef} style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        background: 'var(--color-background-primary)',
+        borderRadius: '0.5rem',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <div style={{
+          padding: '1rem',
+          background: 'var(--color-background-secondary)',
+          borderBottom: '1px solid var(--color-border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ 
+              width: '12px', 
+              height: '12px', 
+              borderRadius: '50%', 
+              background: '#4ade80',
+              display: 'inline-block'
+            }} />
+            <span style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+              Browserless Live Session
+            </span>
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--color-text-tertiary)' }}>
+            {pageUrl && new URL(pageUrl).hostname}
+          </div>
+        </div>
+        
+        <iframe
+          src={liveUrl}
+          style={{
+            flex: 1,
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            backgroundColor: 'white'
+          }}
+          title="Browserless Live Session"
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+        />
+      </div>
+    );
+  }
 
+  // For local browsers, show connection info
   return (
     <div ref={containerRef} style={{
       width: '100%',
@@ -201,7 +259,7 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
             Browser Window Active
           </h3>
           <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>
-            The browser is running in a separate window at:
+            The browser is running at:
           </p>
           <code style={{
             display: 'inline-block',
@@ -227,7 +285,7 @@ export const BrowserEmbed: React.FC<BrowserEmbedProps> = ({
             color: 'var(--color-text-secondary)'
           }}>
             <p style={{ marginBottom: '0.5rem' }}>
-              <strong>Note:</strong> For security reasons, the browser window cannot be embedded directly in this interface.
+              <strong>Note:</strong> For security reasons, local browser windows cannot be embedded directly.
             </p>
             <p>
               The AI agent is controlling the browser in the background. You can see screenshots in the main view.

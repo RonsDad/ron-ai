@@ -196,55 +196,68 @@ class EnhancedBrowserTool:
             return {'error': 'Instructions parameter is required but was empty'}
         
         try:
+            # Import browser manager here to avoid circular imports
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+            from browser.enhanced_browser_manager import get_browser_manager, IntegrationConfig
+            
+            browser_manager = get_browser_manager()
             context = self.get_or_create_conversation_context(conversation_id)
             
-            # Prepare enhanced request payload
-            payload = {
-                "instructions": instructions,
-                "conversation_id": conversation_id,
-                "headless": False,  # Enable for live viewing
-                "enable_live_view": enable_live_view,
-                "enable_human_control": enable_human_control,
-                "context": {
-                    "recent_context": context.get_recent_context(),
-                    "user_preferences": context.user_preferences
-                }
+            # Create integration config
+            integration_config = IntegrationConfig(
+                enable_live_view=enable_live_view,
+                enable_human_control=enable_human_control
+            )
+            
+            # Create integrated browser session using enhanced manager
+            session = await browser_manager.create_integrated_session(
+                conversation_id=conversation_id,
+                browser_config=browser_config or {},
+                integration_config=integration_config
+            )
+            
+            # Create agent with the session
+            agent = await browser_manager.create_agent(
+                task=instructions,
+                session_id=session.session_id,
+                browser_mode=browser_config.get('browser_mode') if browser_config else None
+            )
+            
+            # Update conversation context
+            context.add_browser_session(session.session_id)
+            context.add_context_entry({
+                'type': 'browser_session_started',
+                'session_id': session.session_id,
+                'instructions': instructions[:200] + '...' if len(instructions) > 200 else instructions
+            })
+            
+            # Get session info
+            session_info = session.get_session_info()
+            
+            # Prepare result
+            result = {
+                'success': True,
+                'session_id': session.session_id,
+                'conversation_id': conversation_id,
+                'browser_mode': session.browser_mode,
+                'live_url': session_info.get('live_url'),
+                'features': session_info.get('features', {}),
+                'created_at': session_info.get('created_at'),
+                'agent_task': instructions
             }
             
-            # Add browser config if provided
-            if browser_config:
-                payload.update(browser_config)
+            # Add browser URL for embedded viewing
+            if session_info.get('live_url'):
+                result['browser_url'] = session_info['live_url']
+            elif session.browser_mode == 'local':
+                # For local mode, we'll need to implement a different viewing mechanism
+                result['browser_url'] = f'http://localhost:8000/session/{session.session_id}/view'
             
-            async with httpx.AsyncClient() as http_client:
-                response = await http_client.post(
-                    f'{self.browser_backend_url}/api/start-agent',
-                    json=payload,
-                    timeout=120.0
-                )
-                response.raise_for_status()
-                result = response.json()
+            logger.info(f"Enhanced browser session started: {session.session_id} with mode: {session.browser_mode}")
+            return result
                 
-                # Update conversation context
-                if 'session_id' in result:
-                    context.add_browser_session(result['session_id'])
-                    context.add_context_entry({
-                        'type': 'browser_session_started',
-                        'session_id': result['session_id'],
-                        'instructions': instructions[:200] + '...' if len(instructions) > 200 else instructions
-                    })
-                
-                # Log success
-                if 'browser_url' in result:
-                    logger.info(f"Enhanced browser session started: {result['session_id']} with URL: {result['browser_url']}")
-                
-                return result
-                
-        except httpx.ConnectError:
-            logger.error("Cannot connect to browser-use backend at localhost:8000")
-            return {'error': 'Browser-use backend is not running. Please start it first.'}
-        except httpx.TimeoutException:
-            logger.error("Browser-use backend request timed out")
-            return {'error': 'Browser-use backend request timed out'}
         except Exception as e:
             logger.error(f"Failed to start enhanced browser session: {e}")
             return {'error': str(e)}
@@ -265,31 +278,42 @@ class EnhancedBrowserTool:
             Enhanced session status with context information
         """
         try:
-            async with httpx.AsyncClient() as http_client:
-                response = await http_client.get(
-                    f'{self.browser_backend_url}/api/session/{session_id}/info',
-                    timeout=30.0
-                )
-                response.raise_for_status()
-                result = response.json()
+            # Import browser manager here to avoid circular imports
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+            from browser.enhanced_browser_manager import get_browser_manager
+            
+            browser_manager = get_browser_manager()
+            
+            # Get session from enhanced browser manager
+            session = await browser_manager.get_session(session_id)
+            if not session:
+                return {'error': f'Session {session_id} not found'}
+            
+            # Get enhanced session info
+            if hasattr(session, 'get_session_info'):
+                result = session.get_session_info()
+            else:
+                # Fallback for basic browser sessions
+                result = {
+                    'session_id': session_id,
+                    'status': 'active',
+                    'browser_mode': getattr(session, 'browser_mode', 'local'),
+                    'created_at': getattr(session, 'created_at', datetime.now()).isoformat() if hasattr(getattr(session, 'created_at', None), 'isoformat') else str(getattr(session, 'created_at', datetime.now()))
+                }
+            
+            # Add conversation context if available
+            if conversation_id and conversation_id in self.conversation_contexts:
+                context = self.conversation_contexts[conversation_id]
+                result['conversation_context'] = {
+                    'conversation_id': conversation_id,
+                    'session_count': len(context.browser_sessions),
+                    'recent_activity': context.last_activity.isoformat()
+                }
+            
+            return result
                 
-                # Add conversation context if available
-                if conversation_id and conversation_id in self.conversation_contexts:
-                    context = self.conversation_contexts[conversation_id]
-                    result['conversation_context'] = {
-                        'conversation_id': conversation_id,
-                        'session_count': len(context.browser_sessions),
-                        'recent_activity': context.last_activity.isoformat()
-                    }
-                
-                return result
-                
-        except httpx.ConnectError:
-            logger.error("Cannot connect to browser-use backend")
-            return {'error': 'Browser-use backend is not running'}
-        except httpx.TimeoutException:
-            logger.error("Browser-use backend request timed out")
-            return {'error': 'Browser-use backend request timed out'}
         except Exception as e:
             logger.error(f"Failed to get session status: {e}")
             return {'error': str(e)}

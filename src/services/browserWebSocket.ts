@@ -19,9 +19,12 @@ export interface BrowserSession {
 }
 
 export interface BrowserMessage {
-  type: 'session_update' | 'control_change' | 'screenshot_update' | 'tab_update' | 'error' | 'status';
+  type: 'session_update' | 'control_change' | 'screenshot_update' | 'viewport_update' | 'tab_update' | 'error' | 'status' | 'step_start' | 'step_end';
   session_id?: string;
   data?: any;
+  screenshot?: string;
+  url?: string;
+  title?: string;
   timestamp?: string;
 }
 
@@ -44,9 +47,9 @@ class BrowserWebSocketService {
   constructor(private wsUrl: string = 'ws://localhost:8000/ws/browser') {}
 
   /**
-   * Connect to the WebSocket server
+   * Connect to the WebSocket server for a specific session
    */
-  async connect(): Promise<void> {
+  async connect(sessionId?: string): Promise<void> {
     if (this.ws?.readyState === WebSocket.OPEN) {
       return Promise.resolve();
     }
@@ -58,7 +61,8 @@ class BrowserWebSocketService {
     this.isConnecting = true;
     this.connectionPromise = new Promise((resolve, reject) => {
       try {
-        this.ws = new WebSocket(this.wsUrl);
+        const url = sessionId ? `${this.wsUrl}/${sessionId}` : this.wsUrl;
+        this.ws = new WebSocket(url);
 
         this.ws.onopen = () => {
           console.log('Browser WebSocket connected');
@@ -136,10 +140,14 @@ class BrowserWebSocketService {
    * Handle incoming WebSocket messages
    */
   private handleMessage(message: BrowserMessage): void {
-    console.log('Browser WebSocket message:', message);
+    console.log('📨 WEBSOCKET RAW MESSAGE:', message);
+    console.log('📊 Message type:', message.type);
+    console.log('📊 Session ID:', message.session_id);
+    console.log('📊 Has data:', !!message.data);
+    console.log('📊 Has screenshot:', !!message.screenshot);
 
     // Emit to specific event listeners
-    this.emit(message.type, message.data);
+    this.emit(message.type, message.data || message);
 
     // Emit to session-specific listeners
     if (message.session_id) {
@@ -153,9 +161,9 @@ class BrowserWebSocketService {
   /**
    * Send a message to the server
    */
-  private async send(message: any): Promise<void> {
+  private async send(message: any, sessionId?: string): Promise<void> {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      await this.connect();
+      await this.connect(sessionId);
     }
 
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
@@ -170,10 +178,12 @@ class BrowserWebSocketService {
    */
   async requestControlTransition(request: ControlTransitionRequest): Promise<void> {
     await this.send({
-      type: 'control_transition',
-      ...request,
+      type: 'control_toggle',
+      session_id: request.session_id,
+      human_control: request.take_control,
+      additional_prompt: request.message,
       timestamp: new Date().toISOString()
-    });
+    }, request.session_id);
   }
 
   /**
@@ -181,8 +191,7 @@ class BrowserWebSocketService {
    */
   async subscribeToBrowserSessions(): Promise<void> {
     await this.send({
-      type: 'subscribe',
-      channel: 'browser_sessions',
+      type: 'subscribe_sessions',
       timestamp: new Date().toISOString()
     });
   }
@@ -196,7 +205,7 @@ class BrowserWebSocketService {
       channel: 'session',
       session_id: sessionId,
       timestamp: new Date().toISOString()
-    });
+    }, sessionId);
   }
 
   /**
@@ -216,10 +225,10 @@ class BrowserWebSocketService {
    */
   async requestScreenshot(sessionId: string): Promise<void> {
     await this.send({
-      type: 'request_screenshot',
+      type: 'get_screenshot',
       session_id: sessionId,
       timestamp: new Date().toISOString()
-    });
+    }, sessionId);
   }
 
   /**
@@ -232,7 +241,7 @@ class BrowserWebSocketService {
       message,
       action_type: actionType,
       timestamp: new Date().toISOString()
-    });
+    }, sessionId);
   }
 
   /**
@@ -309,6 +318,10 @@ export function useBrowserWebSocket() {
   React.useEffect(() => {
     // Connection status listener
     const handleConnection = (data: any) => {
+      console.log('🔌 WEBSOCKET DEBUG: Connection status change');
+      console.log('📊 Status:', data.status);
+      console.log('📊 Is connected:', data.status === 'connected');
+      
       setIsConnected(data.status === 'connected');
       setConnectionState(data.status);
     };
@@ -316,6 +329,25 @@ export function useBrowserWebSocket() {
     // Session updates listener
     const handleSessionUpdate = (data: BrowserSession[]) => {
       setSessions(data);
+    };
+
+    // Viewport updates listener  
+    const handleViewportUpdate = (data: any) => {
+      console.log('📺 WEBSOCKET DEBUG: Viewport update received');
+      console.log('📊 Session ID:', data.session_id);
+      console.log('📊 URL:', data.url);
+      console.log('📊 Has screenshot:', !!data.screenshot);
+      
+      setSessions(current => {
+        console.log('📊 Current sessions before update:', current.length);
+        const updated = current.map(session => 
+          session.session_id === data.session_id 
+            ? { ...session, screenshot: data.screenshot, current_url: data.url, current_title: data.title, last_update: data.timestamp }
+            : session
+        );
+        console.log('📊 Sessions after viewport update:', updated.length);
+        return updated;
+      });
     };
 
     // Error listener
@@ -326,6 +358,7 @@ export function useBrowserWebSocket() {
     // Add listeners
     browserWebSocket.on('connection', handleConnection);
     browserWebSocket.on('session_update', handleSessionUpdate);
+    browserWebSocket.on('viewport_update', handleViewportUpdate);
     browserWebSocket.on('error', handleError);
 
     // Connect and subscribe
@@ -344,6 +377,7 @@ export function useBrowserWebSocket() {
     return () => {
       browserWebSocket.off('connection', handleConnection);
       browserWebSocket.off('session_update', handleSessionUpdate);
+      browserWebSocket.off('viewport_update', handleViewportUpdate);
       browserWebSocket.off('error', handleError);
     };
   }, []);

@@ -67,6 +67,7 @@ interface ClaudeAgentProps {
   onCostUpdate?: (cost: number) => void;
   onTaskStepUpdate?: (step: TaskStep) => void;
   onMessageReceived?: (content: any) => void;
+  onBrowserPanelChange?: (show: boolean, sessions?: BrowserSession[]) => void;
   conversationId?: string;
   userId?: string;
 }
@@ -80,6 +81,7 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
   onCostUpdate,
   onTaskStepUpdate,
   onMessageReceived,
+  onBrowserPanelChange,
   conversationId = 'default-conversation',
   userId
 }, ref) => {
@@ -117,11 +119,19 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
 
     // Merge WebSocket sessions with local browser sessions
     useEffect(() => {
+        console.log('🔄 BROWSER PANEL DEBUG: WebSocket sessions effect triggered');
+        console.log('📊 Current browserSessions:', browserSessions.length);
+        console.log('📊 Current wsSessions:', wsSessions.length);
+        console.log('📊 Current showBrowserPanel:', showBrowserPanel);
+        
         const allSessions = [...browserSessions];
+        let newSessionAdded = false;
         
         // Add WebSocket sessions that aren't already in local sessions
         wsSessions.forEach(wsSession => {
+            console.log('🔍 Processing WebSocket session:', wsSession.session_id);
             if (!allSessions.find(s => s.session_id === wsSession.session_id)) {
+                console.log('✅ Adding new WebSocket session:', wsSession.session_id);
                 allSessions.push({
                     session_id: wsSession.session_id,
                     browser_url: wsSession.browser_url,
@@ -132,14 +142,29 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                     streaming: wsSession.streaming,
                     status: wsSession.status
                 });
+                newSessionAdded = true;
+            } else {
+                console.log('⚠️  WebSocket session already exists:', wsSession.session_id);
             }
         });
         
+        console.log('📊 Final allSessions count:', allSessions.length);
+        console.log('📊 newSessionAdded:', newSessionAdded);
+        
         setBrowserSessions(allSessions);
-        setShowBrowserPanel(allSessions.length > 0);
+        
+        // Automatically open browser panel when new sessions are detected
+        if (allSessions.length > 0) {
+            console.log('🔓 OPENING BROWSER PANEL - sessions detected:', allSessions.length);
+            setShowBrowserPanel(true);
+            onBrowserPanelChange?.(true, allSessions);
+        } else {
+            console.log('🔒 NO SESSIONS - panel state unchanged');
+        }
         
         // Notify parent component
         if (onBrowserSessionUpdate) {
+            console.log('📢 Notifying parent of browser session update');
             onBrowserSessionUpdate(allSessions);
         }
     }, [wsSessions, onBrowserSessionUpdate]);
@@ -192,9 +217,16 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
 
     // Enhanced message processing with browser integration
     const processMessageForBrowser = async (message: string): Promise<boolean> => {
+        console.log('🌐 CLAUDE DEBUG: processMessageForBrowser called');
+        console.log('📊 Enable browser use:', enableBrowserUse);
+        console.log('📊 Detects browser need:', detectsBrowserNeed(message));
+        
         if (!enableBrowserUse || !detectsBrowserNeed(message)) {
+            console.log('⚠️  CLAUDE DEBUG: Browser processing skipped - not needed or disabled');
             return false;
         }
+        
+        console.log('🌐 CLAUDE DEBUG: Processing message for browser automation');
 
         try {
             // Call backend to create browser task
@@ -218,6 +250,15 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                 const result = await response.json();
                 
                 if (result.success) {
+                    console.log('🎯 BROWSER PANEL DEBUG: Direct API session created');
+                    console.log('📊 Session ID:', result.session_id);
+                    console.log('📊 Current showBrowserPanel before:', showBrowserPanel);
+                    
+                    // Automatically open browser panel when session is created
+                    console.log('🔓 FORCING BROWSER PANEL OPEN - Direct API session created');
+                    setShowBrowserPanel(true);
+                    onBrowserPanelChange?.(true, result.sessions);
+                    
                     // Add browser task message to chat
                     const browserMessage: Message = {
                         role: 'assistant',
@@ -244,7 +285,17 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                     
                     // Update browser sessions
                     if (result.sessions) {
+                        console.log('📊 BROWSER PANEL DEBUG: Updating sessions from API result');
+                        console.log('📊 Session count:', result.sessions.length);
+                        console.log('📊 Sessions:', result.sessions);
+                        
                         setBrowserSessions(result.sessions);
+                        // Automatically open browser panel when sessions are updated
+                        if (result.sessions.length > 0) {
+                            console.log('🔓 OPENING BROWSER PANEL - sessions updated from API');
+                            setShowBrowserPanel(true);
+                            onBrowserPanelChange?.(true, result.sessions);
+                        }
                     }
 
                     return true;
@@ -267,7 +318,18 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
 
     const handleSend = async (externalMessage?: string) => {
         const messageToSend = externalMessage || input;
-        if (!messageToSend.trim() || isStreaming) return;
+        
+        console.log('🚀 CLAUDE DEBUG: handleSend called');
+        console.log('📊 External message:', externalMessage);
+        console.log('📊 Input message:', input);
+        console.log('📊 Message to send:', messageToSend);
+        console.log('📊 Current isStreaming:', isStreaming);
+        console.log('📊 Current messages count:', messages.length);
+        
+        if (!messageToSend.trim() || isStreaming) {
+            console.log('⚠️  CLAUDE DEBUG: Early return - empty message or already streaming');
+            return;
+        }
 
         // Auto-enable tools for medication-related queries
         const isMedicationQuery = messageToSend.toLowerCase().includes('medication') ||
@@ -313,6 +375,12 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
         setCurrentThinkingBlocks([]);
 
         try {
+            console.log('🧠 CLAUDE DEBUG: Starting Claude API call');
+            console.log('📊 Message to send:', messageToSend);
+            console.log('📊 Previous messages count:', previousMessages.length);
+            console.log('📊 Deep research mode:', deepResearchMode);
+            console.log('📊 Streaming state before call:', isStreaming);
+            
             const response = await fetch('/api/claude/chat/stream', {
                 method: 'POST',
                 headers: {
@@ -330,29 +398,45 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                 }),
             });
 
+            console.log('📊 CLAUDE DEBUG: Response received');
+            console.log('📊 Response status:', response.status);
+            console.log('📊 Response ok:', response.ok);
+            
             if (!response.ok) {
+                console.error('❌ CLAUDE DEBUG: HTTP error!');
+                console.error('📊 Status:', response.status);
+                console.error('📊 Status text:', response.statusText);
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const reader = response.body?.getReader();
             if (!reader) {
+                console.error('❌ CLAUDE DEBUG: No reader available');
                 throw new Error('No reader available');
             }
+            
+            console.log('📊 CLAUDE DEBUG: Starting to read stream');
 
             const decoder = new TextDecoder();
             let currentBlock: any = null;
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                if (done) {
+                    console.log('📊 CLAUDE DEBUG: Stream finished (done=true)');
+                    break;
+                }
 
                 const chunk = decoder.decode(value);
                 const lines = chunk.split('\n');
+                
+                console.log('📊 CLAUDE DEBUG: Processing chunk with', lines.length, 'lines');
 
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
                         try {
                             const event: StreamEvent = JSON.parse(line.slice(6));
+                            console.log('📊 CLAUDE DEBUG: Stream event:', event.event, event.delta ? '(has delta)' : '(no delta)');
                             
                             switch (event.event) {
                                 case 'content_block_start':
@@ -411,6 +495,8 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                                     break;
                                 
                                 case 'done':
+                                    console.log('🏁 CLAUDE DEBUG: Stream done event received');
+                                    console.log('📊 Final usage:', event.final_usage);
                                     if (event.final_usage) {
                                         setTokenUsage(event.final_usage);
                                         // Calculate cost and notify parent
@@ -421,7 +507,7 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                                     break;
                                 
                                 case 'error':
-                                    console.error('Streaming error:', event.error);
+                                    console.error('❌ CLAUDE DEBUG: Streaming error event:', event.error);
                                     streamingMessageRef.current = `Error: ${event.error}`;
                                     setCurrentStreamingMessage(streamingMessageRef.current);
                                     break;
@@ -433,6 +519,10 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                 }
             }
 
+            console.log('🏁 CLAUDE DEBUG: Finalizing assistant message');
+            console.log('📊 Final message length:', streamingMessageRef.current.length);
+            console.log('📊 Thinking blocks count:', thinkingBlocksRef.current.length);
+            
             // Finalize the assistant message
             const assistantMessage: Message = { 
                 role: 'assistant', 
@@ -447,8 +537,11 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
             setCurrentStreamingMessage('');
             setCurrentThinkingBlocks([]);
             
+            console.log('📊 CLAUDE DEBUG: Messages updated, total count:', previousMessages.length + 2);
+            
             // Send the full structured response to parent component
             if (onMessageReceived) {
+                console.log('📊 CLAUDE DEBUG: Sending response to parent component');
                 onMessageReceived({
                     text: streamingMessageRef.current,
                     thinking: thinkingBlocksRef.current,
@@ -475,13 +568,21 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
             }
             
         } catch (error) {
-            console.error('Failed to send message:', error);
+            console.error('❌ CLAUDE DEBUG: Failed to send message:', error);
+            console.error('📊 Error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
+            
             const errorMessage: Message = { 
                 role: 'assistant', 
                 content: 'Sorry, something went wrong while streaming the response.' 
             };
             setMessages([...previousMessages, userMessage, errorMessage]);
         } finally {
+            console.log('🏁 CLAUDE DEBUG: Setting isStreaming to false');
+            console.log('📊 Final streaming state change');
             setIsStreaming(false);
         }
     };
@@ -923,7 +1024,10 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                                 <div className="flex items-center gap-2">
                                     <span className="text-green-600 dark:text-green-400">🌐 Browser Session Active</span>
                                     <button
-                                        onClick={() => setShowBrowserPanel(true)}
+                                        onClick={() => {
+                                            setShowBrowserPanel(true);
+                                            onBrowserPanelChange?.(true, browserSessions);
+                                        }}
                                         className="text-blue-500 hover:text-blue-700 underline text-xs"
                                     >
                                         View Browser Panel
@@ -1160,7 +1264,15 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                         onUserControlChange={handleUserControlChange}
                         onCloseSession={async (sessionId) => {
                             // Handle session close
-                            setBrowserSessions(prev => prev.filter(s => s.session_id !== sessionId));
+                            setBrowserSessions(prev => {
+                                const newSessions = prev.filter(s => s.session_id !== sessionId);
+                                // Close browser panel if no sessions remain
+                                if (newSessions.length === 0) {
+                                    setShowBrowserPanel(false);
+                                    onBrowserPanelChange?.(false, newSessions);
+                                }
+                                return newSessions;
+                            });
                             
                             // Notify backend
                             try {
@@ -1175,6 +1287,7 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
                             // Close all sessions
                             setBrowserSessions([]);
                             setShowBrowserPanel(false);
+                            onBrowserPanelChange?.(false, []);
                             
                             // Notify backend
                             try {

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class BrowserlessConfig:
     """Configuration for Browserless integration"""
     api_token: str
-    endpoint: str = "wss://production-sfo.browserless.io"
+    endpoint: str = "wss://production-sfo.browserless.io/chromium"
     use_residential_proxy: bool = False
     timeout: int = 600000  # 10 minutes default
     region: str = "sfo"  # San Francisco default
@@ -47,7 +47,7 @@ class BrowserlessConfig:
         
         return cls(
             api_token=api_token,
-            endpoint=os.getenv('BROWSERLESS_ENDPOINT', 'wss://production-sfo.browserless.io'),
+            endpoint=os.getenv('BROWSERLESS_ENDPOINT', 'wss://production-sfo.browserless.io/chromium'),
             use_residential_proxy=os.getenv('BROWSERLESS_USE_RESIDENTIAL_PROXY', 'false').lower() == 'true',
             timeout=int(os.getenv('BROWSERLESS_TIMEOUT', '600000')),
             enable_live_url=os.getenv('BROWSERLESS_ENABLE_LIVE_URL', 'false').lower() == 'true',

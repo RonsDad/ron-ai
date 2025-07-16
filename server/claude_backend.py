@@ -14,11 +14,26 @@ import httpx
 import json
 import logging
 import re
+import uuid
 from typing import List, Dict, Any, Optional, Union
 import asyncio
 
-# Import enhanced browser tool
+# Import enhanced browser tool and manager
 from enhanced_browser_tool import EnhancedBrowserTool, get_enhanced_browser_tools
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+from browser.enhanced_browser_manager import get_browser_manager
+from browser.human_control_manager import get_human_control_manager
+# Import deep research service conditionally
+DEEP_RESEARCH_AVAILABLE = False
+try:
+    from deep_research_service import execute_deep_research
+    DEEP_RESEARCH_AVAILABLE = True
+except Exception as e:
+    # Create a dummy function for when deep research is not available
+    async def execute_deep_research(topic):
+        return {"error": "Deep research service not available. Google Cloud service account credentials required."}
 
 load_dotenv()
 
@@ -50,8 +65,10 @@ if not api_key:
 
 client = anthropic.Anthropic(api_key=api_key)
 
-# Initialize Enhanced Browser Tool
+# Initialize Enhanced Browser Tool and Managers
 enhanced_browser_tool = EnhancedBrowserTool()
+browser_manager = get_browser_manager()
+human_control_manager = get_human_control_manager()
 
 # Initialize Perplexity API client
 perplexity_api_key = os.getenv('PERPLEXITY_API_KEY')
@@ -692,6 +709,20 @@ RESEARCH_TOOLS = [
             "required": ["query", "json_schema"]
         }
     ),
+    BetaToolParam(
+        name="adk_deep_research",
+        description="[TIER 3] Advanced deep research using Google's ADK framework. Performs comprehensive multi-step research with: (1) automatic research plan generation, (2) structured section planning, (3) iterative research with quality evaluation, (4) citation-rich final reports. Use for complex topics requiring extensive investigation and structured analysis.",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "topic": {
+                    "type": "string",
+                    "description": "The research topic or question for comprehensive investigation. The ADK agent will automatically generate a research plan, execute iterative research with quality evaluation, and produce a structured report with citations."
+                }
+            },
+            "required": ["topic"]
+        }
+    ),
     {
         "type": "custom",
         "name": "search_nppes",
@@ -952,6 +983,37 @@ ACTION_TOOLS: List[BetaToolParam] = [
 # Enhanced Browser Tools - Intelligent browser automation with conversation awareness
 ENHANCED_BROWSER_TOOLS = get_enhanced_browser_tools()
 
+async def detect_and_suggest_browser_automation(message: str, conversation_id: str) -> Optional[Dict[str, Any]]:
+    """
+    Automatically detect if browser automation might be needed and provide suggestion
+    
+    Args:
+        message: User's message/prompt
+        conversation_id: Conversation identifier
+        
+    Returns:
+        Browser need analysis if automation is suggested, None otherwise
+    """
+    try:
+        # Use enhanced browser tool to analyze the message
+        analysis = await enhanced_browser_tool.analyze_browser_need(message, conversation_id)
+        
+        # Only suggest if confidence is high enough
+        if analysis.get('needs_browser', False) and analysis.get('confidence', 0) > 0.3:
+            logger.info(f"Browser automation suggested for conversation {conversation_id}: {analysis.get('reasoning', '')}")
+            return {
+                'suggestion': 'browser_automation_recommended',
+                'analysis': analysis,
+                'message': f"This task appears to require browser automation. {analysis.get('reasoning', '')}"
+            }
+        
+        return None
+        
+    except Exception as e:
+        logger.error(f"Error in browser need detection: {e}")
+        return None
+
+
 async def execute_tool(tool_name: str, tool_input: Dict[str, Any]) -> Dict[str, Any]:
     """Execute native search, research, and action tools in hierarchical order"""
     try:
@@ -1096,6 +1158,27 @@ async def execute_tool(tool_name: str, tool_input: Dict[str, Any]) -> Dict[str, 
                     search_domain_filter=search_domain_filter,
                     search_recency_filter=search_recency_filter
                 )
+        
+        # ADK Deep Research tool
+        elif tool_name == "adk_deep_research":
+            if "topic" not in tool_input or not tool_input.get("topic"):
+                return {"error": "Missing 'topic' parameter"}
+            
+            topic = tool_input["topic"]
+            try:
+                result = await execute_deep_research(topic)
+                return {
+                    "success": True,
+                    "research_report": result,
+                    "topic": topic,
+                    "agent_type": "adk_deep_research"
+                }
+            except ImportError as e:
+                logger.error(f"ADK Deep Research dependencies not available: {e}")
+                return {"error": f"ADK Deep Research requires Google ADK dependencies. Please install: {str(e)}"}
+            except Exception as e:
+                logger.error(f"ADK Deep Research failed: {e}")
+                return {"error": f"ADK Deep Research failed: {str(e)}"}
         
         # Educational content tools
         elif tool_name in ["generate_educational_content", "create_assessment", "design_curriculum", "create_interactive_content"]:
@@ -1306,6 +1389,16 @@ async def claude_chat(
     
     logger.info(f"Received request with parameters: enable_browser_use={enable_browser_use}, enable_sonar_tools={enable_sonar_tools}, deep_research_mode={deep_research_mode}, message='{message[:100]}...'")
     
+    # Generate conversation ID for context management
+    conversation_id = str(uuid.uuid4())
+    
+    # Intelligent browser need detection - suggest browser automation if needed
+    browser_suggestion = None
+    if not enable_browser_use:  # Only suggest if not already enabled
+        browser_suggestion = await detect_and_suggest_browser_automation(message, conversation_id)
+        if browser_suggestion:
+            logger.info(f"Browser automation suggested: {browser_suggestion['message']}")
+    
     try:
         # Build message history
         messages = []
@@ -1446,6 +1539,7 @@ TIER 2 - Reasoning Tools:
 TIER 3 - Deep Research Tools:
 - sonar_deep_research: Comprehensive multi-step research (only for complex topics)
 - sonar_deep_research_structured: Same with JSON output
+- adk_deep_research: Advanced research using Google's ADK framework (auto-planning, iterative refinement, citations)
 
 REMEMBER: Start with native web_search first, then use these if needed.""")
         

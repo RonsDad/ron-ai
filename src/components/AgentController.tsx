@@ -135,7 +135,7 @@ export default function AgentController() {
   // WebSocket connection
   useEffect(() => {
     if (session?.sessionId) {
-      const ws = new WebSocketClient(`ws://localhost:3000/ws/${session.sessionId}`);
+      const ws = new WebSocketClient(`ws://localhost:8000/ws/${session.sessionId}`);
 
       ws.onOpen(() => {
         setIsConnected(true);

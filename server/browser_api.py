@@ -50,7 +50,7 @@ class BrowserModeRequest(BaseModel):
 
 class BrowserlessConfigRequest(BaseModel):
     api_token: str
-    endpoint: str = "wss://production-sfo.browserless.io"
+    endpoint: str = "wss://production-sfo.browserless.io/chromium"
     use_residential_proxy: bool = False
     enable_live_url: bool = False
     enable_captcha_solving: bool = False

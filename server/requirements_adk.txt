@@ -1,0 +1,16 @@
+# Google ADK Deep Research Agent Dependencies
+# Install with: pip install -r requirements_adk.txt
+
+# Core Google ADK framework
+google-adk>=0.1.0
+
+# Google Generative AI client
+google-generativeai>=0.8.0
+
+# Google Authentication
+google-auth>=2.17.0
+google-auth-oauthlib>=1.0.0
+
+# Additional dependencies that may be needed
+google-cloud-core>=2.4.1
+grpcio>=1.60.0

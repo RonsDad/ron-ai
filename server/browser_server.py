@@ -7,17 +7,19 @@ import httpx
 from io import BytesIO
 from fastapi.responses import StreamingResponse
 from PyPDF2 import PdfReader
-from browser_use import Agent
-from browser_use.browser import BrowserProfile, BrowserSession
-from browser_use.llm import ChatAnthropic, ChatGoogle
+from browser_use import Agent, Browser, BrowserConfig
+from browser_use.browser.context import BrowserContextConfig
+from langchain_anthropic import ChatAnthropic
+from src.browser.enhanced_browser_session import EnhancedBrowserContext, EnhancedBrowserSession
 import asyncio
 import json
 import uuid
 import logging
 import sys
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, Set
 import os
+import time
 
 # Add virtual display support (Linux only)
 import platform
@@ -206,6 +208,7 @@ async def web_search(query: str, max_results: int = 5):
 class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[str, WebSocket] = {}
+        self.general_connections: Set[WebSocket] = set()
     
     async def connect(self, websocket: WebSocket, session_id: str):
         await websocket.accept()
@@ -221,6 +224,45 @@ class ConnectionManager:
         if session_id in self.active_connections:
             await self.active_connections[session_id].send_text(json.dumps(message))
             logger.debug(f"Message sent to session {session_id}: {message.get('type', 'unknown')}")
+    
+    async def broadcast_session_update(self):
+        """Broadcast session updates to all general WebSocket connections"""
+        if not hasattr(self, 'general_connections'):
+            return
+            
+        # Prepare session list
+        session_list = []
+        for session_id, session in active_sessions.items():
+            session_list.append({
+                "session_id": session_id,
+                "browser_url": session.get("browser_url", ""),
+                "current_url": session.get("current_url", ""),
+                "current_title": session.get("title", ""),
+                "task": session.get("task", ""),
+                "userControl": session.get("human_control", False),
+                "last_update": session.get("last_update", ""),
+                "live_url": session.get("live_url", ""),
+                "recording_active": session.get("recording_active", False),
+                "status": session.get("status", "unknown")
+            })
+        
+        message = {
+            "type": "session_update",
+            "data": session_list
+        }
+        
+        # Send to all general connections
+        disconnected = set()
+        for websocket in self.general_connections:
+            try:
+                await websocket.send_text(json.dumps(message))
+            except Exception as e:
+                logger.error(f"Error sending broadcast message: {e}")
+                disconnected.add(websocket)
+        
+        # Remove disconnected connections
+        for websocket in disconnected:
+            self.general_connections.discard(websocket)
 
 manager = ConnectionManager()
 
@@ -1155,28 +1197,24 @@ async def start_agent(request: StartAgentRequest):
     try:
         logger.info(f"[{session_id}] Starting browser agent with instructions: {request.instructions}")
         
-        # Use browserless integration following the exact documentation
-        from browser_use import Agent, Browser
-        from browser_use.browser import BrowserConfig, BrowserContext, BrowserContextConfig
-        from browser_use.browser.session import BrowserSession
+        # Use BrowserQL (Browserless cloud browser) following the exact documentation
+        from browser_use import Agent
+        from browser_use.browser import BrowserProfile, BrowserSession
         
-        # Create browserless connection URL with token and proxy
-        browserless_url = f"wss://production-sfo.browserless.io?token={os.getenv('BROWSERLESS_API_TOKEN')}&proxy=residential"
+        # Create BrowserQL connection URL with optimal launch parameters
+        browserql_url = f"wss://production-sfo.browserless.io/chromium/bql?token={os.getenv('BROWSERLESS_API_TOKEN')}&headless=true&stealth=true&humanlike=true&blockAds=true&blockConsentModals=true&proxy=residential&proxySticky=true&timeout=600000"
         
-        # Create browser with browserless CDP URL
-        browser = Browser(config=BrowserConfig(cdp_url=browserless_url))
-        
-        # Create browser context with configuration
-        context = BrowserContext(
-            browser,
-            BrowserContextConfig(
-                wait_for_network_idle_page_load_time=10.0,
-                highlight_elements=True
-            )
+        # Create browser profile for BrowserQL CDP connection
+        browser_profile = BrowserProfile(
+            cdp_url=browserql_url,
+            headless=True,
         )
         
-        # Get the browser session
-        browser_session = await context.get_session()
+        # Create browser session directly
+        browser_session = BrowserSession(browser_profile=browser_profile)
+        
+        # Start the browser session
+        await browser_session.start()
         
         # Create LLM
         llm = ChatGoogle(
@@ -1185,26 +1223,26 @@ async def start_agent(request: StartAgentRequest):
             api_key=os.getenv("GOOGLE_API_KEY")
         )
         
-        # Create agent using browser and context
+        # Create agent using browser session
         agent = Agent(
             task=request.instructions,
             llm=llm,
-            browser=browser,
-            browser_context=context,
+            browser_session=browser_session,
         )
         
         # Generate live URL for browserless
         browser_url = None
         try:
             # Get current page and create CDP session
-            current_page = browser_session.agent_current_page
+            current_page = await browser_session.get_current_page()
             if current_page:
-                cdp_session = await current_page.createCDPSession()
+                cdp_session = await current_page.new_cdp_session()
                 response = await cdp_session.send('Browserless.liveURL', {
                     "timeout": 600000  # 10 minutes
                 })
                 browser_url = response.get("liveURL")
                 logger.info(f"[{session_id}] Live URL generated: {browser_url}")
+                await cdp_session.detach()
         except Exception as e:
             logger.warning(f"[{session_id}] Failed to generate live URL: {e}")
             browser_url = None
@@ -1353,8 +1391,39 @@ async def stop_agent(session_id: str = Query(...)):
         try:
             session = active_sessions[session_id]
             
+            # Stop recording if active
+            if session.get("recording_active", False):
+                try:
+                    browser_session = session.get("browser_session")
+                    if browser_session:
+                        page = await browser_session.get_current_page()
+                        if page:
+                            cdp = await page.createCDPSession()
+                            await cdp.send("Browserless.stopRecording")
+                            logger.info(f"Recording stopped for session: {session_id}")
+                except Exception as e:
+                    logger.error(f"Failed to stop recording for session {session_id}: {e}")
+            
             # Close browser session
-            await session["browser_session"].close()
+            if "browser_session" in session:
+                try:
+                    await session["browser_session"].close()
+                except Exception as e:
+                    logger.error(f"Failed to close browser session: {e}")
+            
+            # Close browser context
+            if "browser_context" in session:
+                try:
+                    await session["browser_context"].close()
+                except Exception as e:
+                    logger.error(f"Failed to close browser context: {e}")
+            
+            # Close browser
+            if "browser" in session:
+                try:
+                    await session["browser"].close()
+                except Exception as e:
+                    logger.error(f"Failed to close browser: {e}")
             
             # Stop virtual display if it exists
             if 'virtual_display' in session and session['virtual_display']:
@@ -1366,6 +1435,10 @@ async def stop_agent(session_id: str = Query(...)):
             
             # Remove from active sessions
             del active_sessions[session_id]
+            
+            # Notify WebSocket clients about session removal
+            await manager.broadcast_session_update()
+            
             logger.info(f"Agent session stopped: {session_id}")
             return {"message": f"Session {session_id} stopped"}
         except Exception as e:
@@ -1373,6 +1446,203 @@ async def stop_agent(session_id: str = Query(...)):
             raise
     else:
         raise HTTPException(status_code=404, detail="Session not found")
+
+@app.post("/api/browser/claude/browser-task")
+async def create_browser_task(
+    conversation_id: str = Body(...),
+    task: str = Body(...),
+    user_id: str = Body(...),
+    context: dict = Body(None)
+):
+    """Create a new browser task for Claude agent integration"""
+    try:
+        logger.info(f"Creating browser task for conversation: {conversation_id}")
+        logger.info(f"Task: {task}")
+        
+        # Generate unique session ID
+        session_id = f"claude_{conversation_id}_{int(time.time())}"
+        
+        # Start browser session with Browser-Use integration
+        session_data = {
+            "session_id": session_id,
+            "task": task,
+            "user_id": user_id,
+            "conversation_id": conversation_id,
+            "context": context or {},
+            "created_at": time.time(),
+            "status": "initializing",
+            "human_control": False,
+            "live_url": None,
+            "recording_active": False
+        }
+        
+        # Store session
+        active_sessions[session_id] = session_data
+        
+        # Initialize browser session asynchronously
+        asyncio.create_task(initialize_browser_session(session_id, task))
+        
+        return {
+            "success": True,
+            "session_id": session_id,
+            "message": "Browser task created successfully"
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to create browser task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+async def initialize_browser_session(session_id: str, task: str):
+    """Initialize browser session with Browser-Use integration using proper pattern"""
+    try:
+        logger.info(f"Initializing browser session: {session_id}")
+        
+        # Get or create browser session
+        session = active_sessions.get(session_id)
+        if not session:
+            logger.error(f"Session {session_id} not found")
+            return
+            
+        # Configure Browser-Use with Browserless
+        browserless_token = os.getenv('BROWSERLESS_API_TOKEN')
+        if not browserless_token:
+            raise ValueError("BROWSERLESS_API_TOKEN not found in environment")
+            
+        # Create Browserless connection URL with proper configuration
+        browserless_url = f"wss://production-sfo.browserless.io?token={browserless_token}"
+        if os.getenv('BROWSERLESS_USE_RESIDENTIAL_PROXY', 'false').lower() == 'true':
+            browserless_url += "&proxy=residential"
+            
+        logger.info(f"Connecting to Browserless: {browserless_url[:50]}...")
+        
+        # Create Browser-Use browser instance
+        browser = Browser(config=BrowserConfig(cdp_url=browserless_url))
+        
+        # Create browser context using the proper pattern
+        context = EnhancedBrowserContext(
+            browser,
+            BrowserContextConfig(
+                wait_for_network_idle_page_load_time=10.0,
+                highlight_elements=True,
+                ignore_https_errors=True
+            )
+        )
+        
+        # Get browser session
+        browser_session = await context.get_session()
+        
+        # Add browser components to active sessions
+        session["browser"] = browser
+        session["browser_context"] = context
+        session["browser_session"] = browser_session
+        session["status"] = "active"
+        
+        # Create LiveURL for user interaction
+        try:
+            # Get the current page
+            page = browser_session.current_page
+            if page:
+                # Create CDP session for Browserless features
+                cdp = await page.createCDPSession()
+                
+                # Generate LiveURL
+                response = await cdp.send('Browserless.liveURL', {
+                    "timeout": int(os.getenv('BROWSERLESS_TIMEOUT', 600000))
+                })
+                session["live_url"] = response.get("liveURL")
+                logger.info(f"LiveURL created: {session['live_url']}")
+                
+                # Set up CDP event listeners
+                cdp.on('Browserless.captchaFound', lambda: logger.info('Captcha detected!'))
+                cdp.on('Browserless.liveComplete', lambda: handle_live_complete(session_id))
+                
+                # Start recording if enabled
+                if os.getenv('BROWSERLESS_ENABLE_RECORDING', 'false').lower() == 'true':
+                    await cdp.send("Browserless.startRecording")
+                    session["recording_active"] = True
+                    logger.info(f"Recording started for session: {session_id}")
+                
+                # Update session with page info
+                session["current_url"] = page.url
+                session["title"] = await page.title()
+                session["last_update"] = datetime.now().isoformat()
+                
+        except Exception as e:
+            logger.warning(f"Failed to create LiveURL or set up CDP: {e}")
+        
+        # Create and start Browser-Use Agent with proper configuration
+        llm = ChatAnthropic(
+            model_name="claude-3-5-sonnet-20241022",
+            temperature=0.0,
+            timeout=100,
+            api_key=os.getenv('ANTHROPIC_API_KEY')
+        )
+        
+        agent = Agent(
+            task=task,
+            llm=llm,
+            browser=browser,
+            browser_context=context,
+            use_vision=True,
+            use_thinking=True,
+            max_actions_per_step=10,
+            max_failures=3
+        )
+        
+        session["agent"] = agent
+        
+        # Start the agent task in background
+        asyncio.create_task(run_agent_task(session_id, agent))
+        
+        # Notify WebSocket clients about session update
+        await manager.broadcast_session_update()
+        
+        logger.info(f"Browser session initialized successfully: {session_id}")
+        
+    except Exception as e:
+        logger.error(f"Failed to initialize browser session {session_id}: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        if session_id in active_sessions:
+            active_sessions[session_id]["status"] = "error"
+            active_sessions[session_id]["error"] = str(e)
+            await manager.broadcast_session_update()
+
+async def run_agent_task(session_id: str, agent: Agent):
+    """Run the Browser-Use agent task in background"""
+    try:
+        logger.info(f"Starting agent task for session: {session_id}")
+        
+        # Update session status
+        if session_id in active_sessions:
+            active_sessions[session_id]["status"] = "running"
+            await manager.broadcast_session_update()
+        
+        # Run the agent
+        result = await agent.run()
+        
+        # Update session with result
+        if session_id in active_sessions:
+            active_sessions[session_id]["status"] = "completed"
+            active_sessions[session_id]["result"] = result
+            active_sessions[session_id]["completed_at"] = datetime.now().isoformat()
+            await manager.broadcast_session_update()
+            
+        logger.info(f"Agent task completed for session: {session_id}")
+        
+    except Exception as e:
+        logger.error(f"Agent task failed for session {session_id}: {e}")
+        if session_id in active_sessions:
+            active_sessions[session_id]["status"] = "error"
+            active_sessions[session_id]["error"] = str(e)
+            await manager.broadcast_session_update()
+
+async def handle_live_complete(session_id: str):
+    """Handle LiveURL completion"""
+    logger.info(f"LiveURL interaction completed for session: {session_id}")
+    if session_id in active_sessions:
+        active_sessions[session_id]["live_url"] = None
+        await manager.broadcast_session_update()
 
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
@@ -1430,6 +1700,78 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     except WebSocketDisconnect:
         manager.disconnect(session_id)
         logger.info(f"WebSocket disconnected for session {session_id}")
+
+@app.websocket("/ws")
+async def general_websocket_endpoint(websocket: WebSocket):
+    """General WebSocket endpoint for browser session updates"""
+    await websocket.accept()
+    logger.info("General WebSocket connection established")
+    
+    try:
+        # Send initial message with all active sessions
+        await send_session_list(websocket)
+        
+        # Add to general connections for broadcasting
+        general_connections = getattr(manager, 'general_connections', set())
+        general_connections.add(websocket)
+        manager.general_connections = general_connections
+        
+        while True:
+            try:
+                data = await websocket.receive_text()
+                message = json.loads(data)
+                message_type = message.get("type")
+                
+                if message_type == "subscribe_sessions":
+                    # Client wants to subscribe to session updates
+                    await websocket.send_text(json.dumps({
+                        "type": "subscription_confirmed",
+                        "message": "Subscribed to session updates"
+                    }))
+                    
+                elif message_type == "ping":
+                    # Handle ping/pong for connection health
+                    await websocket.send_text(json.dumps({
+                        "type": "pong",
+                        "timestamp": time.time()
+                    }))
+                    
+            except json.JSONDecodeError:
+                logger.error(f"Invalid JSON received: {data}")
+                
+    except WebSocketDisconnect:
+        logger.info("General WebSocket connection closed")
+        # Remove from general connections
+        if hasattr(manager, 'general_connections'):
+            manager.general_connections.discard(websocket)
+    except Exception as e:
+        logger.error(f"Error in general WebSocket endpoint: {e}")
+        try:
+            await websocket.close()
+        except:
+            pass
+
+async def send_session_list(websocket: WebSocket):
+    """Send current session list to WebSocket client"""
+    session_list = []
+    for session_id, session in active_sessions.items():
+        session_list.append({
+            "session_id": session_id,
+            "browser_url": session.get("browser_url", ""),
+            "current_url": session.get("current_url", ""),
+            "current_title": session.get("title", ""),
+            "task": session.get("task", ""),
+            "userControl": session.get("human_control", False),
+            "last_update": session.get("last_update", ""),
+            "live_url": session.get("live_url", ""),
+            "recording_active": session.get("recording_active", False),
+            "status": session.get("status", "unknown")
+        })
+    
+    await websocket.send_text(json.dumps({
+        "type": "session_update",
+        "data": session_list
+    }))
 
 @app.get('/health')
 async def health_check():

@@ -16,6 +16,9 @@ import { useSidebar } from "./ui/sidebar";
 import { MacroMenu } from "./MacroMenu";
 import { useClaudeBrowserService } from "../services/claudeBrowserService";
 import { useClaudeHealthcareBrowserService } from "../services/claudeHealthcareBrowserService";
+import ClaudeAgent from "./ClaudeAgent";
+import { BrowserViewPanel } from "./BrowserViewPanel";
+import { useBrowserWebSocket } from "../services/browserWebSocket";
 
 interface Message {
   id: string;
@@ -47,6 +50,19 @@ export function MainLayout() {
   
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const macroTriggerRef = useRef<HTMLDivElement>(null);
+  const claudeAgentRef = useRef<any>(null);
+
+  // Browser panel state
+  const [showBrowserPanel, setShowBrowserPanel] = useState(false);
+  const [browserSessions, setBrowserSessions] = useState<any[]>([]);
+  
+  // Browser WebSocket integration
+  const { 
+    sessions: wsSessions, 
+    requestControlTransition, 
+    sendUserFeedback,
+    isConnected: wsConnected 
+  } = useBrowserWebSocket();
 
   // Claude Browser Service integration
   const {
@@ -89,140 +105,75 @@ export function MainLayout() {
     };
   }, [showMacroMenu]);
 
-  const handleSearch = useCallback(async () => {
-    if (!searchQuery.trim() || isAiResponding) return;
-
-    const userMessage = searchQuery;
-    const newUserMessage: Message = { 
-      id: `user-${Date.now()}`, 
-      sender: 'user', 
-      text: userMessage 
-    };
+  // Synchronize browser sessions and panel state
+  useEffect(() => {
+    // Merge WebSocket sessions with local browser sessions
+    const allSessions = [...browserSessions];
+    let newSessionAdded = false;
     
-    setChatHistory(prev => [...prev, newUserMessage]);
-    setSearchQuery("");
-    setIsAiResponding(true);
-
-    try {
-      // Call Claude API directly
-      const response = await fetch('/api/claude/chat/stream', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          conversation_history: chatHistory,
-          enable_thinking: true,
-          thinking_budget: deepResearch ? 32000 : 16000,
-          max_output_tokens: 8192,
-          enable_browser_use: true,
-          enable_sonar_tools: true,
-          deep_research_mode: deepResearch
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    // Add WebSocket sessions that aren't already in local sessions
+    wsSessions.forEach(wsSession => {
+      if (!allSessions.find(s => s.session_id === wsSession.session_id)) {
+        allSessions.push({
+          session_id: wsSession.session_id,
+          browser_url: wsSession.browser_url,
+          current_url: wsSession.current_url,
+          current_title: wsSession.current_title,
+          screenshot: wsSession.screenshot,
+          last_update: wsSession.last_update,
+          streaming: wsSession.streaming,
+          status: wsSession.status,
+          live_url: wsSession.live_url,
+          is_browserless: wsSession.is_browserless
+        });
+        newSessionAdded = true;
       }
-
-      // Handle streaming response
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('No reader available');
-      }
-
-      const decoder = new TextDecoder();
-      let aiResponse = '';
-      let thinking: any[] = [];
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const event = JSON.parse(line.slice(6));
-              
-              switch (event.event) {
-                case 'thinking_delta':
-                  if (event.delta) {
-                    thinking.push({ content: event.delta });
-                  }
-                  break;
-                
-                case 'text_delta':
-                  if (event.delta) {
-                    aiResponse += event.delta;
-                    
-                    // Update message in real-time
-                    setChatHistory(prev => {
-                      const newMessages = [...prev];
-                      const lastMessage = newMessages[newMessages.length - 1];
-                      
-                      if (lastMessage && lastMessage.sender === 'ai') {
-                        lastMessage.text = aiResponse;
-                        lastMessage.thinking = thinking;
-                      } else {
-                        newMessages.push({
-                          id: `assistant-${Date.now()}`,
-                          sender: 'ai',
-                          text: aiResponse,
-                          thinking: thinking
-                        });
-                      }
-                      
-                      return newMessages;
-                    });
-                  }
-                  break;
-              }
-            } catch (e) {
-              console.error('Failed to parse SSE event:', e);
-            }
-          }
-        }
-      }
-
-      // Finalize AI message
-      const finalAiMsg: Message = {
-        id: `assistant-${Date.now()}`,
-        sender: 'ai',
-        text: aiResponse,
-        thinking: thinking.length > 0 ? thinking : undefined
-      };
-
-      setChatHistory(prev => {
-        const newMessages = [...prev];
-        const lastMessage = newMessages[newMessages.length - 1];
-        
-        if (lastMessage && lastMessage.sender === 'ai') {
-          newMessages[newMessages.length - 1] = finalAiMsg;
-        } else {
-          newMessages.push(finalAiMsg);
-        }
-        
-        return newMessages;
-      });
-
-    } catch (error) {
-      console.error('Failed to process message:', error);
-      
-      // Add error message
-      const errorMsg: Message = {
-        id: `assistant-error-${Date.now()}`,
-        sender: 'ai',
-        text: `I encountered an error: ${error}. Please try again.`
-      };
-      setChatHistory(prev => [...prev, errorMsg]);
-    } finally {
-      setIsAiResponding(false);
+    });
+    
+    // Update sessions if new ones were added
+    if (newSessionAdded) {
+      setBrowserSessions(allSessions);
     }
-  }, [searchQuery, isAiResponding, chatHistory, deepResearch]);
+    
+    // Auto-open browser panel when sessions are available
+    if (allSessions.length > 0 && !showBrowserPanel) {
+      setShowBrowserPanel(true);
+    }
+    
+    // Auto-close browser panel when no sessions
+    if (allSessions.length === 0 && showBrowserPanel) {
+      setShowBrowserPanel(false);
+    }
+  }, [wsSessions, browserSessions, showBrowserPanel]);
+
+  const handleSearch = useCallback(async () => {
+    console.log('🚀 MAIN LAYOUT DEBUG: handleSearch called - using ClaudeAgent');
+    console.log('📊 Search query:', searchQuery);
+    console.log('📊 Is AI responding:', isAiResponding);
+    
+    if (!searchQuery.trim() || isAiResponding) {
+      console.log('⚠️  MAIN LAYOUT DEBUG: Early return - empty query or AI responding');
+      return;
+    }
+
+    // Add user message to chat history
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      sender: 'user',
+      text: searchQuery
+    };
+    setChatHistory(prev => [...prev, userMessage]);
+
+    console.log('📊 MAIN LAYOUT DEBUG: Sending to ClaudeAgent');
+    setIsAiResponding(true);
+    
+    // Use ClaudeAgent instead of direct API call
+    if (claudeAgentRef.current) {
+      claudeAgentRef.current.handleExternalMessage(searchQuery);
+    }
+    
+    setSearchQuery("");
+  }, [searchQuery, isAiResponding]);
 
   // Detect healthcare intent
   const detectHealthcareIntent = (message: string): boolean => {
@@ -324,8 +275,10 @@ export function MainLayout() {
       <SidebarLayout>
         <div className="flex flex-col h-screen max-h-screen bg-background">
           <Header />
-          <main className="flex-1 container mx-auto p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden relative">
-            <AnimatePresence>
+          <main className="flex-1 flex overflow-hidden relative">
+            {/* Chat Interface */}
+            <div className={`flex flex-col ${showBrowserPanel ? 'w-1/2' : 'w-full'} transition-all duration-300 container mx-auto p-4 md:p-6 lg:p-8 overflow-hidden`}>
+              <AnimatePresence>
               {chatHistory.length === 0 && !mainContentVisible && (
                 <motion.div 
                   initial={{ opacity: 0 }} 
@@ -427,6 +380,24 @@ export function MainLayout() {
                 </div>
               </div>
             </footer>
+            </div>
+            
+            {/* Browser Panel */}
+            {showBrowserPanel && (
+              <div className="w-1/2 border-l border-border bg-background">
+                <BrowserViewPanel 
+                  isActive={true} 
+                  sessions={browserSessions}
+                  onUserControlChange={async (sessionId, takeControl) => {
+                    try {
+                      await requestControlTransition(sessionId, takeControl);
+                    } catch (error) {
+                      console.error('Failed to change user control:', error);
+                    }
+                  }}
+                />
+              </div>
+            )}
           </main>
           
           {/* Macro Menu */}
@@ -436,6 +407,33 @@ export function MainLayout() {
             onClose={() => setShowMacroMenu(false)}
             triggerRef={macroTriggerRef}
           />
+          
+          {/* Hidden ClaudeAgent component */}
+          <div style={{ display: 'none' }}>
+            <ClaudeAgent
+              ref={claudeAgentRef}
+              onMessageReceived={(content) => {
+                console.log('📊 MAIN LAYOUT DEBUG: Received message from ClaudeAgent');
+                const newMessage: Message = {
+                  id: `assistant-${Date.now()}`,
+                  sender: 'ai',
+                  text: content.text || '',
+                  thinking: content.thinking,
+                  tool_calls: content.tool_calls,
+                  tool_results: content.tool_results
+                };
+                setChatHistory(prev => [...prev, newMessage]);
+                setIsAiResponding(false);
+              }}
+              onBrowserPanelChange={(show, sessions) => {
+                console.log('📊 MAIN LAYOUT DEBUG: Browser panel state changed:', show, sessions);
+                setShowBrowserPanel(show);
+                if (sessions) {
+                  setBrowserSessions(sessions);
+                }
+              }}
+            />
+          </div>
         </div>
       </SidebarLayout>
     </TooltipProvider>

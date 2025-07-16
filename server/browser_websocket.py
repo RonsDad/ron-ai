@@ -1,14 +1,15 @@
 """
-WebSocket server for real-time browser communication
-Handles browser session updates, control transitions, and live data streaming
+Enhanced WebSocket server for real-time multi-channel communication
+Handles browser session updates, control transitions, MCP events, voice events, and live data streaming
 """
 
 import asyncio
 import json
 import logging
-from typing import Dict, Set, Any, Optional
+from typing import Dict, Set, Any, Optional, List, Union
 from datetime import datetime
 import uuid
+from enum import Enum
 
 from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.routing import APIRouter
@@ -24,6 +25,26 @@ logger = logging.getLogger(__name__)
 
 # WebSocket router
 ws_router = APIRouter()
+
+class EventType(Enum):
+    """Event types for multi-channel communication"""
+    BROWSER = "browser"
+    MCP = "mcp"
+    VOICE = "voice"
+    CONTROL = "control"
+    SESSION = "session"
+    SYSTEM = "system"
+
+class ChannelType(Enum):
+    """Channel types for subscription management"""
+    BROWSER_SESSIONS = "browser_sessions"
+    SESSION = "session"
+    MCP_TOOLS = "mcp_tools"
+    MCP_TOOL = "mcp_tool"
+    VOICE_SESSIONS = "voice_sessions"
+    VOICE_SESSION = "voice_session"
+    CONTROL_EVENTS = "control_events"
+    SYSTEM_EVENTS = "system_events"
 
 class BrowserWebSocketManager:
     """Manages WebSocket connections for browser sessions"""
