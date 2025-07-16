@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query, WebSocket, WebSocketDisconnect, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from typing import Optional
 import os
 from dotenv import load_dotenv
@@ -1500,6 +1500,9 @@ async def create_browser_task(request: BrowserTaskRequest):
             }]
         }
         
+    except ValidationError as e:
+        logger.error(f"Validation error in browser task request: {e}")
+        raise HTTPException(status_code=422, detail=f"Invalid request data: {e}")
     except Exception as e:
         logger.error(f"Failed to create browser task: {e}")
         raise HTTPException(status_code=500, detail=str(e))

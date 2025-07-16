@@ -300,6 +300,32 @@ const ClaudeAgent = forwardRef<ClaudeAgentRef, ClaudeAgentProps>(({
 
                     return true;
                 }
+            } else {
+                // Handle HTTP errors including 422
+                console.error('❌ BROWSER TASK API ERROR:', response.status, response.statusText);
+                
+                let errorDetails = 'Unknown error';
+                try {
+                    const errorData = await response.json();
+                    errorDetails = errorData.detail || errorData.message || JSON.stringify(errorData);
+                    console.error('📊 Error details:', errorData);
+                } catch (parseError) {
+                    console.error('📊 Could not parse error response:', parseError);
+                }
+                
+                // Add error message to chat for user feedback
+                const errorMessage: Message = {
+                    role: 'assistant',
+                    content: {
+                        text: `I encountered an error while trying to start the browser task: ${errorDetails}. Let me try a different approach.`,
+                        error: true,
+                        browser_task_failed: true
+                    }
+                };
+                setMessages(prev => [...prev, errorMessage]);
+                
+                // Don't return true - let it fall through to regular Claude processing
+                return false;
             }
         } catch (error) {
             console.error('Error creating browser task:', error);
