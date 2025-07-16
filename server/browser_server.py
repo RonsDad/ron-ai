@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Query, WebSocket, WebSocketDisconnect, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 import os
 from dotenv import load_dotenv
 import httpx
@@ -1447,28 +1448,29 @@ async def stop_agent(session_id: str = Query(...)):
     else:
         raise HTTPException(status_code=404, detail="Session not found")
 
+class BrowserTaskRequest(BaseModel):
+    conversation_id: str
+    task: str
+    user_id: Optional[str] = None
+    context: Optional[dict] = None
+
 @app.post("/api/browser/claude/browser-task")
-async def create_browser_task(
-    conversation_id: str = Body(...),
-    task: str = Body(...),
-    user_id: str = Body(...),
-    context: dict = Body(None)
-):
+async def create_browser_task(request: BrowserTaskRequest):
     """Create a new browser task for Claude agent integration"""
     try:
-        logger.info(f"Creating browser task for conversation: {conversation_id}")
-        logger.info(f"Task: {task}")
+        logger.info(f"Creating browser task for conversation: {request.conversation_id}")
+        logger.info(f"Task: {request.task}")
         
         # Generate unique session ID
-        session_id = f"claude_{conversation_id}_{int(time.time())}"
+        session_id = f"claude_{request.conversation_id}_{int(time.time())}"
         
         # Start browser session with Browser-Use integration
         session_data = {
             "session_id": session_id,
-            "task": task,
-            "user_id": user_id,
-            "conversation_id": conversation_id,
-            "context": context or {},
+            "task": request.task,
+            "user_id": request.user_id,
+            "conversation_id": request.conversation_id,
+            "context": request.context or {},
             "created_at": time.time(),
             "status": "initializing",
             "human_control": False,
@@ -1480,12 +1482,22 @@ async def create_browser_task(
         active_sessions[session_id] = session_data
         
         # Initialize browser session asynchronously
-        asyncio.create_task(initialize_browser_session(session_id, task))
+        asyncio.create_task(initialize_browser_session(session_id, request.task))
         
         return {
             "success": True,
             "session_id": session_id,
-            "message": "Browser task created successfully"
+            "message": "Browser task created successfully",
+            "sessions": [{
+                "session_id": session_id,
+                "browser_url": f"http://localhost:8000/browser/{session_id}",
+                "current_url": "",
+                "current_title": "Initializing...",
+                "task": request.task,
+                "status": "initializing",
+                "streaming": True,
+                "last_update": datetime.now().isoformat()
+            }]
         }
         
     except Exception as e:
