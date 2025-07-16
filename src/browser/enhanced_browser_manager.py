@@ -161,16 +161,16 @@ class EnhancedBrowserManager:
             from browser_use.browser.browser import Browser
             browser = Browser(config=browser_config)
             
-            # Create browser context
-            context = await browser.new_context()
+            # Create browser session (new_context returns a BrowserSession)
+            browser_session = await browser.new_context()
             
-            # Get the current page
-            current_page = await context.get_current_page()
+            # Get the current page from the session
+            current_page = browser_session.agent_current_page
             
-            # Create enhanced session
+            # Create enhanced session directly using the browser_session
             session = EnhancedBrowserSession(
-                context=context.session.context,  # Get the playwright context
-                current_page=current_page,
+                browser_context=browser_session.browser_context,  # Use the playwright BrowserContext
+                agent_current_page=current_page,
                 session_id=session_id,
                 browser_mode="browserless"
             )

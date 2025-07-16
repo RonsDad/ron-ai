@@ -18,14 +18,20 @@ class EnhancedBrowserSession(BrowserSession):
     
     def __init__(
         self,
-        context: PlaywrightContext,
-        cached_state: Optional[dict] = None,
-        current_page: Optional[Page] = None,
+        browser_context: Optional[PlaywrightContext] = None,
+        agent_current_page: Optional[Page] = None,
         session_id: Optional[str] = None,
-        browser_mode: str = "local"
+        browser_mode: str = "local",
+        **kwargs
     ):
-        super().__init__(context=context, cached_state=cached_state)
-        self.current_page = current_page
+        # Initialize the parent BrowserSession with proper parameters
+        super().__init__(
+            browser_context=browser_context,
+            agent_current_page=agent_current_page,
+            **kwargs
+        )
+        
+        # Add enhanced capabilities
         self.session_id = session_id or str(uuid.uuid4())
         self.browser_mode = browser_mode  # "local" or "browserless"
         self.created_at = datetime.now()
@@ -51,12 +57,12 @@ class EnhancedBrowserSession(BrowserSession):
     
     async def initialize_cdp_session(self) -> bool:
         """Initialize CDP session for advanced features (Browserless only)"""
-        if self.browser_mode != "browserless" or not self.current_page:
+        if self.browser_mode != "browserless" or not self.agent_current_page:
             logger.warning("CDP session only available in Browserless mode")
             return False
         
         try:
-            self.cdp_session = await self.current_page.createCDPSession()
+            self.cdp_session = await self.agent_current_page.createCDPSession()
             self.metadata['features']['cdp_enabled'] = True
             logger.info(f"CDP session initialized for session {self.session_id}")
             return True
@@ -169,7 +175,7 @@ class EnhancedBrowserSession(BrowserSession):
         """Get comprehensive session information"""
         return {
             **self.metadata,
-            'current_url': self.current_page.url if self.current_page else None,
+            'current_url': self.agent_current_page.url if self.agent_current_page else None,
             'live_url': self.live_url,
             'recording_active': self.recording_active,
             'cdp_session_active': self.cdp_session is not None

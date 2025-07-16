@@ -1155,22 +1155,28 @@ async def start_agent(request: StartAgentRequest):
     try:
         logger.info(f"[{session_id}] Starting browser agent with instructions: {request.instructions}")
         
-        # Import enhanced browser manager
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-        from src.browser.enhanced_browser_manager import get_browser_manager
+        # Use browserless integration following the exact documentation
+        from browser_use import Agent, Browser
+        from browser_use.browser import BrowserConfig, BrowserContext, BrowserContextConfig
+        from browser_use.browser.session import BrowserSession
         
-        # Get browser manager with browserless integration
-        browser_manager = get_browser_manager()
+        # Create browserless connection URL with token and proxy
+        browserless_url = f"wss://production-sfo.browserless.io?token={os.getenv('BROWSERLESS_API_TOKEN')}&proxy=residential"
         
-        # Create browser session using enhanced manager (will use browserless if configured)
-        browser_session = await browser_manager.create_browser_session(
-            session_id=session_id,
-            browser_mode=None,  # Let it use configured mode (browserless if available)
-            headless=request.headless,
-            enable_live_url=True,
-            enable_recording=True,
-            enable_captcha_solving=True
+        # Create browser with browserless CDP URL
+        browser = Browser(config=BrowserConfig(cdp_url=browserless_url))
+        
+        # Create browser context with configuration
+        context = BrowserContext(
+            browser,
+            BrowserContextConfig(
+                wait_for_network_idle_page_load_time=10.0,
+                highlight_elements=True
+            )
         )
+        
+        # Get the browser session
+        browser_session = await context.get_session()
         
         # Create LLM
         llm = ChatGoogle(
@@ -1179,23 +1185,29 @@ async def start_agent(request: StartAgentRequest):
             api_key=os.getenv("GOOGLE_API_KEY")
         )
         
-        # Create agent using enhanced browser session
+        # Create agent using browser and context
         agent = Agent(
             task=request.instructions,
             llm=llm,
-            browser_session=browser_session,
-            use_vision=True,
-            max_actions_per_step=10,
-            max_failures=3,
+            browser=browser,
+            browser_context=context,
         )
         
-        # Get browser URL for embedding
+        # Generate live URL for browserless
         browser_url = None
-        if hasattr(browser_session, 'live_url') and browser_session.live_url:
-            browser_url = browser_session.live_url
-        elif hasattr(browser_session, 'get_session_info'):
-            session_info = browser_session.get_session_info()
-            browser_url = session_info.get('live_url')
+        try:
+            # Get current page and create CDP session
+            current_page = browser_session.agent_current_page
+            if current_page:
+                cdp_session = await current_page.createCDPSession()
+                response = await cdp_session.send('Browserless.liveURL', {
+                    "timeout": 600000  # 10 minutes
+                })
+                browser_url = response.get("liveURL")
+                logger.info(f"[{session_id}] Live URL generated: {browser_url}")
+        except Exception as e:
+            logger.warning(f"[{session_id}] Failed to generate live URL: {e}")
+            browser_url = None
         
         # Store session for monitoring and control
         active_sessions[session_id] = {

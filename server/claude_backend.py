@@ -17,6 +17,9 @@ import re
 from typing import List, Dict, Any, Optional, Union
 import asyncio
 
+# Import enhanced browser tool
+from enhanced_browser_tool import EnhancedBrowserTool, get_enhanced_browser_tools
+
 load_dotenv()
 
 # Configure logging
@@ -46,6 +49,9 @@ if not api_key:
     raise ValueError("ANTHROPIC_API_KEY must be set in environment variables")
 
 client = anthropic.Anthropic(api_key=api_key)
+
+# Initialize Enhanced Browser Tool
+enhanced_browser_tool = EnhancedBrowserTool()
 
 # Initialize Perplexity API client
 perplexity_api_key = os.getenv('PERPLEXITY_API_KEY')
@@ -898,6 +904,7 @@ EDUCATIONAL_TOOLS: List[BetaToolParam] = [
 
 # TIER 4: Action Tools - Use ONLY when you need to take specific actions (forms, purchases, etc.)
 ACTION_TOOLS: List[BetaToolParam] = [
+    # Legacy browser tools (kept for backward compatibility)
     BetaToolParam(
         name="start_browser_agent",
         description="[TIER 4 - ACTION ONLY] Use ONLY after research is complete and you need to take action. Start browser automation for filling forms, making purchases, clicking buttons, or submitting applications. NOT for research - use search tools first.",
@@ -942,6 +949,9 @@ ACTION_TOOLS: List[BetaToolParam] = [
     )
 ]
 
+# Enhanced Browser Tools - Intelligent browser automation with conversation awareness
+ENHANCED_BROWSER_TOOLS = get_enhanced_browser_tools()
+
 async def execute_tool(tool_name: str, tool_input: Dict[str, Any]) -> Dict[str, Any]:
     """Execute native search, research, and action tools in hierarchical order"""
     try:
@@ -963,7 +973,63 @@ async def execute_tool(tool_name: str, tool_input: Dict[str, Any]) -> Dict[str, 
                 limit=10
             )
         
-        # Action tools (browser automation)
+        # Enhanced browser tools (intelligent automation with conversation awareness)
+        elif tool_name in ["start_browser_automation", "analyze_browser_need", "request_human_help", "get_enhanced_session_status"]:
+            if tool_name == "start_browser_automation":
+                if "instructions" not in tool_input or not tool_input.get("instructions"):
+                    logger.error(f"Missing or empty 'instructions' in tool_input: {tool_input}")
+                    return {"error": "Missing 'instructions' parameter. Please provide detailed instructions for what the browser should do."}
+                if "conversation_id" not in tool_input or not tool_input.get("conversation_id"):
+                    logger.error(f"Missing or empty 'conversation_id' in tool_input: {tool_input}")
+                    return {"error": "Missing 'conversation_id' parameter. Please provide a conversation identifier."}
+                
+                return await enhanced_browser_tool.start_browser_session(
+                    instructions=tool_input["instructions"],
+                    conversation_id=tool_input["conversation_id"],
+                    browser_config=tool_input.get("browser_config"),
+                    enable_live_view=tool_input.get("enable_live_view", True),
+                    enable_human_control=tool_input.get("enable_human_control", True)
+                )
+            
+            elif tool_name == "analyze_browser_need":
+                if "prompt" not in tool_input or not tool_input.get("prompt"):
+                    return {"error": "Missing 'prompt' parameter"}
+                if "conversation_id" not in tool_input or not tool_input.get("conversation_id"):
+                    return {"error": "Missing 'conversation_id' parameter"}
+                
+                return await enhanced_browser_tool.analyze_browser_need(
+                    prompt=tool_input["prompt"],
+                    conversation_id=tool_input["conversation_id"]
+                )
+            
+            elif tool_name == "request_human_help":
+                if "session_id" not in tool_input:
+                    return {"error": "Missing 'session_id' parameter"}
+                if "reason" not in tool_input:
+                    return {"error": "Missing 'reason' parameter"}
+                if "current_situation" not in tool_input:
+                    return {"error": "Missing 'current_situation' parameter"}
+                
+                return await enhanced_browser_tool.request_human_intervention(
+                    session_id=tool_input["session_id"],
+                    reason=tool_input["reason"],
+                    current_state={
+                        "situation": tool_input["current_situation"],
+                        "suggested_actions": tool_input.get("suggested_actions", [])
+                    },
+                    conversation_id=tool_input.get("conversation_id")
+                )
+            
+            elif tool_name == "get_enhanced_session_status":
+                if "session_id" not in tool_input:
+                    return {"error": "Missing 'session_id' parameter"}
+                
+                return await enhanced_browser_tool.get_session_status(
+                    session_id=tool_input["session_id"],
+                    conversation_id=tool_input.get("conversation_id")
+                )
+        
+        # Legacy action tools (browser automation) - kept for backward compatibility
         elif tool_name in ["start_browser_agent", "get_browser_agent_status", "stop_browser_agent"]:
             browser_tool = BrowserUseTool()
             
@@ -1423,6 +1489,7 @@ REMEMBER: Start with native web_search first, then use these if needed.""")
             # Add action tools (Tier 4) 
             if enable_browser_use:
                 available_tools.extend(ACTION_TOOLS)
+                available_tools.extend(ENHANCED_BROWSER_TOOLS)
             
             # Make initial request to Claude using beta client with streaming
             stream = client.beta.messages.create(
@@ -1448,6 +1515,7 @@ REMEMBER: Start with native web_search first, then use these if needed.""")
             # Add action tools (Tier 4)
             if enable_browser_use:
                 available_tools.extend(ACTION_TOOLS)
+                available_tools.extend(ENHANCED_BROWSER_TOOLS)
             
             # Non-thinking mode still needs beta client for proper tool support
             stream = client.beta.messages.create(
@@ -1715,6 +1783,7 @@ REMEMBER: Start with native web_search first, then use these if needed.""")
             # Add action tools (Tier 4)
             if enable_browser_use:
                 final_tools.extend(ACTION_TOOLS)
+                final_tools.extend(ENHANCED_BROWSER_TOOLS)
             
             # Get final response from Claude
             # Keep thinking enabled for tool result responses to maintain consistency
@@ -1976,6 +2045,7 @@ async def claude_chat_stream(
             # Add action tools (Tier 4)
             if enable_browser_use:
                 stream_tools.extend(ACTION_TOOLS)
+                stream_tools.extend(ENHANCED_BROWSER_TOOLS)
             
             # Stream response
             stream = client.beta.messages.create(
