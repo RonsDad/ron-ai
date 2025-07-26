@@ -1,0 +1,537 @@
+2025-07-24 13:14:11,974 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:11,974 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:11,974 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:11,974 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:11,974 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:11,974 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:12,311 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:14:12,311 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:14:12,320 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:14:12,320 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:14:12,320 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:14:12,329 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:14:36,391 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:36,391 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:36,391 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:36,391 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:36,391 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:36,391 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:14:36,715 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:14:36,715 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:14:36,726 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:14:36,726 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:14:36,726 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:14:36,735 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:15:00,241 [INFO] __main__: Creating new browserless session
+2025-07-24 13:15:00,242 [INFO] browserless_service: Initializing browserless session session_1753384500.242197_0
+2025-07-24 13:15:00,242 [INFO] browserless_service: Connecting to browserless: wss://production-sfo.browserless.io
+2025-07-24 13:15:03,271 [INFO] browserless_service: Session session_1753384500.242197_0 initialized successfully
+2025-07-24 13:15:03,272 [INFO] browserless_service: Created browserless session session_1753384500.242197_0
+2025-07-24 13:15:03,272 [INFO] __main__: Created browserless session: session_1753384500.242197_0
+2025-07-24 13:15:18,559 [INFO] __main__: Navigating to https://ron-ai.io and generating LiveURL for session session_1753384500.242197_0
+2025-07-24 13:15:18,710 [INFO] browserless_service: Recording started for session session_1753384500.242197_0
+2025-07-24 13:15:18,710 [INFO] browserless_service: Navigating to https://ron-ai.io in session session_1753384500.242197_0
+2025-07-24 13:15:32,800 [INFO] browserless_service: LiveURL generated for session session_1753384500.242197_0: https://production-sfo.browserless.io/e/53616c7465645f5fcb82b13d931e096bb3784baf293658b118c874677b3aeaba5671b2ce161fe8f894639f9412c53ca4/live/index.html?i=b7b4b3361be8eb10ebeda4dc7c37b8b6&t=600000
+2025-07-24 13:15:32,801 [INFO] __main__: LiveURL generated for iframe embedding: https://production-sfo.browserless.io/e/53616c7465645f5fcb82b13d931e096bb3784baf293658b118c874677b3aeaba5671b2ce161fe8f894639f9412c53ca4/live/index.html?i=b7b4b3361be8eb10ebeda4dc7c37b8b6&t=600000
+2025-07-24 13:16:25,171 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 13:16:25,171 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution', 'computer']
+2025-07-24 13:20:42,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:20:42,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:20:42,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:20:42,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:20:42,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:20:42,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:20:42,471 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:20:42,471 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:20:42,480 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:20:42,480 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:20:42,480 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:20:42,490 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:24:01,185 [INFO] __main__: Creating new browserless session
+2025-07-24 13:24:01,186 [INFO] browserless_service: Initializing browserless session session_1753385041.186345_0
+2025-07-24 13:24:01,186 [INFO] browserless_service: Connecting to browserless: wss://production-sfo.browserless.io
+2025-07-24 13:24:05,715 [INFO] browserless_service: Session session_1753385041.186345_0 initialized successfully
+2025-07-24 13:24:05,716 [INFO] browserless_service: Created browserless session session_1753385041.186345_0
+2025-07-24 13:24:05,716 [INFO] __main__: Created browserless session: session_1753385041.186345_0
+2025-07-24 13:24:15,148 [INFO] __main__: Creating new browserless session
+2025-07-24 13:24:15,149 [INFO] browserless_service: Initializing browserless session session_1753385055.14935_1
+2025-07-24 13:24:15,149 [INFO] browserless_service: Connecting to browserless: wss://production-sfo.browserless.io
+2025-07-24 13:24:17,273 [INFO] browserless_service: Session session_1753385055.14935_1 initialized successfully
+2025-07-24 13:24:17,273 [INFO] browserless_service: Created browserless session session_1753385055.14935_1
+2025-07-24 13:24:17,273 [INFO] __main__: Created browserless session: session_1753385055.14935_1
+2025-07-24 13:24:17,481 [INFO] __main__: Navigating to https://ron-ai.io and generating LiveURL for session session_1753385055.14935_1
+2025-07-24 13:24:17,567 [INFO] browserless_service: Recording started for session session_1753385055.14935_1
+2025-07-24 13:24:17,567 [INFO] browserless_service: Navigating to https://ron-ai.io in session session_1753385055.14935_1
+2025-07-24 13:24:29,455 [INFO] __main__: Creating new browserless session
+2025-07-24 13:24:29,455 [INFO] browserless_service: Initializing browserless session session_1753385069.455862_2
+2025-07-24 13:24:29,456 [INFO] browserless_service: Connecting to browserless: wss://production-sfo.browserless.io
+2025-07-24 13:24:32,084 [INFO] __main__: Creating new browserless session
+2025-07-24 13:24:32,084 [INFO] browserless_service: Initializing browserless session session_1753385072.084165_2
+2025-07-24 13:24:32,084 [INFO] browserless_service: Connecting to browserless: wss://production-sfo.browserless.io
+2025-07-24 13:24:32,422 [ERROR] browserless_service: Failed to initialize session session_1753385072.084165_2: BrowserType.connect_over_cdp: WebSocket error: wss://production-sfo.browserless.io/ 429 Too Many Requests
+<html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>openresty/1.27.1.2</center>
+</body>
+</html>
+
+Call log:
+  - <ws connecting> wss://production-sfo.browserless.io/
+  - <ws unexpected response> wss://production-sfo.browserless.io/ 429 Too Many Requests
+<html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>openresty/1.27.1.2</center>
+</body>
+</html>
+  - <ws error> wss://production-sfo.browserless.io/ error WebSocket was closed before the connection was established
+  - <ws connect error> wss://production-sfo.browserless.io/ WebSocket was closed before the connection was established
+  - <ws disconnected> wss://production-sfo.browserless.io/ code=1006 reason=
+
+2025-07-24 13:24:32,422 [ERROR] browserless_service: Failed to create session: BrowserType.connect_over_cdp: WebSocket error: wss://production-sfo.browserless.io/ 429 Too Many Requests
+<html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>openresty/1.27.1.2</center>
+</body>
+</html>
+
+Call log:
+  - <ws connecting> wss://production-sfo.browserless.io/
+  - <ws unexpected response> wss://production-sfo.browserless.io/ 429 Too Many Requests
+<html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>openresty/1.27.1.2</center>
+</body>
+</html>
+  - <ws error> wss://production-sfo.browserless.io/ error WebSocket was closed before the connection was established
+  - <ws connect error> wss://production-sfo.browserless.io/ WebSocket was closed before the connection was established
+  - <ws disconnected> wss://production-sfo.browserless.io/ code=1006 reason=
+
+2025-07-24 13:24:32,422 [ERROR] __main__: Failed to create browserless session: BrowserType.connect_over_cdp: WebSocket error: wss://production-sfo.browserless.io/ 429 Too Many Requests
+<html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>openresty/1.27.1.2</center>
+</body>
+</html>
+
+Call log:
+  - <ws connecting> wss://production-sfo.browserless.io/
+  - <ws unexpected response> wss://production-sfo.browserless.io/ 429 Too Many Requests
+<html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>openresty/1.27.1.2</center>
+</body>
+</html>
+  - <ws error> wss://production-sfo.browserless.io/ error WebSocket was closed before the connection was established
+  - <ws connect error> wss://production-sfo.browserless.io/ WebSocket was closed before the connection was established
+  - <ws disconnected> wss://production-sfo.browserless.io/ code=1006 reason=
+
+2025-07-24 13:24:32,711 [INFO] browserless_service: Session session_1753385069.455862_2 initialized successfully
+2025-07-24 13:24:32,711 [INFO] browserless_service: Created browserless session session_1753385069.455862_2
+2025-07-24 13:24:32,711 [INFO] __main__: Created browserless session: session_1753385069.455862_2
+2025-07-24 13:24:47,570 [ERROR] browserless_service: Navigation failed for session session_1753385055.14935_1: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://ron-ai.io/", waiting until "networkidle"
+
+2025-07-24 13:24:47,571 [ERROR] browserless_service: Failed to create LiveURL session: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://ron-ai.io/", waiting until "networkidle"
+
+2025-07-24 13:24:47,571 [ERROR] __main__: Failed to navigate and create LiveURL: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://ron-ai.io/", waiting until "networkidle"
+
+2025-07-24 13:27:23,633 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 13:27:23,633 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 13:34:05,732 [INFO] browserless_service: Session session_1753385041.186345_0 cleaned up successfully
+2025-07-24 13:34:05,733 [INFO] browserless_service: Cleaned up expired session session_1753385041.186345_0
+2025-07-24 13:34:16,220 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:16,220 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:16,220 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:16,220 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:16,220 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:16,221 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:16,544 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:34:16,544 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:34:16,554 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:34:16,554 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:34:16,554 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:34:16,563 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:34:22,595 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:22,595 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:22,595 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:22,595 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:22,595 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:22,595 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:34:22,874 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:34:22,875 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:34:22,884 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:34:22,884 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:34:22,884 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:34:22,893 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:35:02,204 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:35:02,204 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:35:02,204 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:35:02,204 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:35:02,204 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:35:02,204 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:35:02,531 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:35:02,531 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:35:02,540 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:35:02,540 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:35:02,540 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:35:02,549 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:40:55,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:40:55,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:40:55,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:40:55,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:40:55,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:40:55,135 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:40:55,472 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:40:55,472 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:40:55,481 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:40:55,481 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:40:55,481 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:40:55,491 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:41:35,243 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 13:41:35,244 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 13:41:35,244 [INFO] __main__: API STREAMING MODE ACTIVATED - CREATING GENERATOR
+2025-07-24 13:41:35,250 [INFO] __main__: GENERATOR STARTING - CALLING CLAUDE AGENT
+2025-07-24 13:41:35,251 [INFO] __main__: CLAUDE AGENT RETURNED STREAM GENERATOR - ITERATING
+2025-07-24 13:41:35,251 [ERROR] __main__: STREAMING ERROR: 'async for' requires an object with __aiter__ method, got coroutine
+2025-07-24 13:41:35,251 [ERROR] __main__: FULL STREAMING ERROR:
+Traceback (most recent call last):
+  File "/Users/timhunter/ron-ai/backend/api.py", line 273, in stream_generator
+    async for event in stream_gen:
+                       ^^^^^^^^^^
+TypeError: 'async for' requires an object with __aiter__ method, got coroutine
+2025-07-24 13:43:31,632 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:43:31,633 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:43:31,633 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:43:31,633 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:43:31,633 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:43:31,633 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:43:31,977 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:43:31,977 [INFO] claude_agent_fixed: Initializing Claude agent with API key: sk-ant-api03...
+2025-07-24 13:43:31,986 [INFO] claude_agent_fixed: Claude agent initialized successfully
+2025-07-24 13:43:31,986 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:43:31,986 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:43:31,995 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:44:20,989 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 13:44:20,990 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 13:44:20,990 [INFO] __main__: API STREAMING MODE ACTIVATED - CREATING GENERATOR
+2025-07-24 13:44:20,995 [INFO] __main__: GENERATOR STARTING - CALLING CLAUDE AGENT
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Starting Claude execution with 1 messages
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Config: temp=0.7, max_tokens=4096, thinking=True, stream=True
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Tools: ['web_search', 'text_editor', 'code_execution']
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Added system prompt: You are Ron AI, an advanced healthcare advocacy AI assistant powered by Claude Sonnet 4. 
+You help u...
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Added 3 tools
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Enabled thinking with budget 3996, set temp=1.0
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: Making API request with params: ['model', 'max_tokens', 'temperature', 'messages', 'system', 'tools', 'thinking']
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: CLAUDE STREAMING MODE - CALLING _stream_response
+2025-07-24 13:44:20,995 [INFO] __main__: CLAUDE AGENT RETURNED STREAM GENERATOR - ITERATING
+2025-07-24 13:44:20,995 [INFO] claude_agent_fixed: STARTING CLAUDE STREAM CONNECTION WITH CORRECT API
+2025-07-24 13:44:21,249 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2025-07-24 13:44:21,250 [ERROR] claude_agent_fixed: CLAUDE STREAM ERROR: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "tools.0: Input tag 'web_search_20241210' found using 'type' does not match any of the expected tags: 'bash_20250124', 'custom', 'text_editor_20250124', 'text_editor_20250429', 'text_editor_20250728', 'web_search_20250305'"}}
+2025-07-24 13:44:21,250 [ERROR] claude_agent_fixed: CLAUDE STREAM FULL ERROR:
+Traceback (most recent call last):
+  File "/Users/timhunter/ron-ai/backend/claude_agent_fixed.py", line 147, in _stream_response
+    async with self.async_client.messages.stream(**request_params) as stream:
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/lib/streaming/_messages.py", line 295, in __aenter__
+    raw_stream = await self.__api_request
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/_base_client.py", line 1888, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/_base_client.py", line 1688, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "tools.0: Input tag 'web_search_20241210' found using 'type' does not match any of the expected tags: 'bash_20250124', 'custom', 'text_editor_20250124', 'text_editor_20250429', 'text_editor_20250728', 'web_search_20250305'"}}
+2025-07-24 13:44:21,255 [ERROR] __main__: STREAMING ERROR: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "tools.0: Input tag 'web_search_20241210' found using 'type' does not match any of the expected tags: 'bash_20250124', 'custom', 'text_editor_20250124', 'text_editor_20250429', 'text_editor_20250728', 'web_search_20250305'"}}
+2025-07-24 13:44:21,255 [ERROR] __main__: FULL STREAMING ERROR:
+Traceback (most recent call last):
+  File "/Users/timhunter/ron-ai/backend/api.py", line 273, in stream_generator
+    async for event in stream_gen:
+    ...<2 lines>...
+        yield f"data: {json.dumps(event)}\n\n"
+  File "/Users/timhunter/ron-ai/backend/claude_agent_fixed.py", line 147, in _stream_response
+    async with self.async_client.messages.stream(**request_params) as stream:
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/lib/streaming/_messages.py", line 295, in __aenter__
+    raw_stream = await self.__api_request
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/_base_client.py", line 1888, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/_base_client.py", line 1688, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "tools.0: Input tag 'web_search_20241210' found using 'type' does not match any of the expected tags: 'bash_20250124', 'custom', 'text_editor_20250124', 'text_editor_20250429', 'text_editor_20250728', 'web_search_20250305'"}}
+2025-07-24 13:49:46,469 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:49:46,469 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:49:46,469 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:49:46,469 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:49:46,469 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:49:46,469 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:49:46,798 [INFO] __main__: Initializing Claude agent...
+2025-07-24 13:49:46,803 [INFO] __main__: Initializing healthcare agent...
+2025-07-24 13:49:46,803 [INFO] __main__: Initializing browser integration...
+2025-07-24 13:49:46,812 [INFO] __main__: All agents initialized successfully
+2025-07-24 13:50:41,805 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 13:50:41,805 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 13:50:41,806 [INFO] __main__: API STREAMING MODE - USING SIMPLE CLAUDE
+2025-07-24 13:50:42,051 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2025-07-24 13:50:42,052 [ERROR] __main__: STREAMING ERROR: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "tools.1.text_editor_20250429.name: Input should be 'str_replace_based_edit_tool'"}}
+2025-07-24 13:50:42,052 [ERROR] __main__: FULL STREAMING ERROR:
+Traceback (most recent call last):
+  File "/Users/timhunter/ron-ai/backend/api.py", line 257, in stream_generator
+    async for event in claude_agent.stream_chat(
+    ...<5 lines>...
+        yield f"data: {json.dumps(event)}\n\n"
+  File "/Users/timhunter/ron-ai/backend/claude_simple.py", line 83, in stream_chat
+    async with self.client.messages.stream(**params) as stream:
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/lib/streaming/_messages.py", line 295, in __aenter__
+    raw_stream = await self.__api_request
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/_base_client.py", line 1888, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.13/site-packages/anthropic/_base_client.py", line 1688, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "tools.1.text_editor_20250429.name: Input should be 'str_replace_based_edit_tool'"}}
+2025-07-24 13:59:23,245 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:59:23,245 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:59:23,246 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:59:23,246 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:59:23,246 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:59:23,246 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 13:59:23,468 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 13:59:23,501 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:03:50,112 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:03:50,112 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:03:50,112 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:03:50,113 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:03:50,113 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:03:50,113 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:03:50,337 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:03:50,372 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:04:16,063 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:04:16,063 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:04:16,063 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:04:16,063 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:04:16,063 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:04:16,063 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:04:16,282 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:04:16,316 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:04:54,126 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:04:54,126 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:04:54,126 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:04:54,133 [ERROR] claude_completions: Streaming error: AsyncMessages.stream() got an unexpected keyword argument 'reasoning'
+2025-07-24 14:06:26,192 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:06:26,192 [INFO] __main__: Request config: stream=False, thinking=True, tools=['bash', 'code_execution', 'computer', 'text_editor', 'web_search']
+2025-07-24 14:06:26,193 [ERROR] claude_completions: Completion error: AsyncMessages.create() got an unexpected keyword argument 'reasoning'
+2025-07-24 14:08:30,381 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:08:30,381 [INFO] __main__: Request config: stream=False, thinking=True, tools=['bash', 'code_execution', 'computer', 'text_editor', 'web_search']
+2025-07-24 14:08:30,382 [ERROR] claude_completions: Completion error: AsyncMessages.create() got an unexpected keyword argument 'reasoning'
+2025-07-24 14:08:47,703 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:47,703 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:47,703 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:47,703 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:47,703 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:47,703 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:47,925 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:08:47,958 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:08:58,949 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:58,949 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:58,949 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:58,949 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:58,949 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:58,949 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:08:59,158 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:08:59,189 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:09:09,806 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:09,806 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:09,806 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:09,806 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:09,806 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:09,806 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:09,982 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:09:10,005 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:09:35,542 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:35,543 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:35,543 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:35,543 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:35,543 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:35,543 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:09:35,756 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:09:35,789 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:11:42,490 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:11:42,491 [INFO] __main__: Request config: stream=False, thinking=True, tools=['bash', 'code_execution', 'computer', 'text_editor', 'web_search']
+2025-07-24 14:11:46,452 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 14:12:29,192 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:12:29,192 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:12:29,193 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:12:29,193 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:12:29,193 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:12:29,193 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:12:29,415 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:12:29,448 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:13:13,965 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:13:13,965 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:13:13,965 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:13:15,140 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 14:14:39,008 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:14:39,008 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:14:39,008 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:14:39,008 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:14:39,008 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:14:39,008 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:14:39,229 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:14:39,261 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:16:11,395 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:16:11,396 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:16:11,396 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:16:11,396 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:16:11,396 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:16:11,396 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 14:16:11,613 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 14:16:11,646 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 14:18:14,084 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:18:14,085 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:18:14,085 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:18:15,025 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 14:18:26,507 [INFO] __main__: Received chat request with 3 messages
+2025-07-24 14:18:26,508 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:18:26,508 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:18:27,829 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 14:28:52,160 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:28:52,161 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:28:52,161 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:28:53,188 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 14:29:32,007 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:29:32,007 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:29:32,007 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:29:33,151 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 14:41:12,214 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 14:41:12,215 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 14:41:12,215 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 14:41:13,469 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 15:44:13,428 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:44:13,428 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:44:13,428 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:44:13,429 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:44:13,429 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:44:13,429 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:44:13,654 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 15:44:13,691 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 15:44:31,971 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 15:44:31,972 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 15:44:31,972 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 15:44:32,241 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2025-07-24 15:44:32,242 [ERROR] claude_completions: Streaming error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': '`temperature` may only be set to 1 when thinking is enabled. Please consult our documentation at https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking#important-considerations-when-using-extended-thinking'}}
+2025-07-24 15:58:39,643 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:58:39,643 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:58:39,643 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:58:39,643 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:58:39,643 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:58:39,643 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 15:58:39,908 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 15:58:39,945 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 15:59:44,693 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 15:59:44,695 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 15:59:44,697 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 15:59:45,916 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:14:53,603 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:14:53,603 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:14:53,603 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:14:53,603 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:14:53,603 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:14:53,603 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:14:53,837 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 16:14:53,873 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 16:15:06,402 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:15:06,403 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:15:06,403 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:15:07,668 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:15:25,854 [INFO] __main__: Received chat request with 3 messages
+2025-07-24 16:15:25,854 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:15:25,854 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:15:26,923 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:23:26,628 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:23:26,629 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:23:26,629 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:23:27,628 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:24:43,268 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:24:43,268 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:24:43,268 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:24:43,268 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:24:43,268 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:24:43,269 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 16:24:43,492 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 16:24:43,527 [INFO] __main__: Advanced features disabled - completions only mode
+2025-07-24 16:25:59,702 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:25:59,704 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:25:59,704 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:26:01,218 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:31:26,778 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:31:26,779 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:31:26,779 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:31:28,028 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:35:23,206 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:35:23,207 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:35:23,208 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:35:24,347 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:36:01,682 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:36:01,682 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:36:01,682 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:36:02,845 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:36:53,351 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:36:53,351 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:36:53,352 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:36:54,474 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 16:41:07,222 [INFO] __main__: Received chat request with 1 messages
+2025-07-24 16:41:07,223 [INFO] __main__: Request config: stream=True, thinking=True, tools=['web_search', 'text_editor', 'code_execution']
+2025-07-24 16:41:07,225 [INFO] __main__: STREAMING COMPLETIONS MODE
+2025-07-24 16:41:08,447 [INFO] httpx: HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-24 18:55:10,086 [INFO] browser_use_service: browser-use library loaded successfully
+2025-07-24 18:55:10,087 [INFO] api: Browser-Use service imported successfully
+2025-07-24 18:55:12,473 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:12,474 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:12,474 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:12,474 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:12,474 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:12,474 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:12,929 [INFO] api: Initializing Claude completions agent...
+2025-07-24 18:55:12,935 [INFO] api: Advanced features disabled - completions only mode
+2025-07-24 18:55:24,888 [INFO] browser_use_service: browser-use library loaded successfully
+2025-07-24 18:55:24,889 [INFO] api: Browser-Use service imported successfully
+2025-07-24 18:55:26,770 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:26,770 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:26,770 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:26,770 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:26,770 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:26,770 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:55:27,196 [INFO] api: Initializing Claude completions agent...
+2025-07-24 18:55:27,203 [INFO] api: Advanced features disabled - completions only mode
+2025-07-24 18:57:14,984 [INFO] browser_use_service: browser-use library loaded successfully
+2025-07-24 18:57:14,985 [INFO] __main__: Browser-Use service imported successfully
+2025-07-24 18:57:17,105 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:57:17,106 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:57:17,106 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:57:17,106 [INFO] google_adk.google.adk.models.registry: Updating LLM class for gemini-.* from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:57:17,106 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/endpoints\/.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:57:17,106 [INFO] google_adk.google.adk.models.registry: Updating LLM class for projects\/.+\/locations\/.+\/publishers\/google\/models\/gemini.+ from <class 'google.adk.models.google_llm.Gemini'> to <class 'google.adk.models.google_llm.Gemini'>
+2025-07-24 18:57:17,575 [INFO] __main__: Initializing Claude completions agent...
+2025-07-24 18:57:17,582 [INFO] __main__: Advanced features disabled - completions only mode

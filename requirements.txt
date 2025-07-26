@@ -1,0 +1,22 @@
+browser-use>=0.5.5
+python-dotenv
+anthropic
+fastapi
+uvicorn
+
+# OpenAI
+openai>=1.0.0
+
+# Google Cloud AI/ML
+google-cloud-aiplatform>=1.40.0
+google-generativeai>=0.3.0
+google-auth>=2.0.0
+google-auth-oauthlib>=1.0.0
+google-auth-httplib2>=0.2.0
+
+# Google ADK (Application Development Kit)
+google-adk>=0.1.0
+
+# Additional Google Cloud services
+google-cloud-storage>=2.10.0
+google-cloud-logging>=3.8.0
